@@ -1,0 +1,24 @@
+<div class="row1 jumbotron">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="page-header">
+          <h1>Application Skeleton <small>for AngularJS</small></h1>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row2 jumbotron" ng-show='breadcrumbs'>
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <ol class="breadcrumb">
+          <li><a ui-sref="home">Home</a></li>
+          <li ng-repeat="bc in breadcrumbs.slice(0,breadcrumbs.length-1)"><a ui-sref="{{bc.state}}">{{bc.text}}</a></li>
+          <li class="active">{{breadcrumbs[breadcrumbs.length-1].text}}</li>                
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>      

@@ -1,0 +1,29 @@
+
+/** UI Bootstrap **/
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
+/** Header **/
+header {
+  .row1 {
+    &.jumbotron {
+      background: #358CCE;
+      padding: 12px 24px 0;
+      margin-bottom: 0;
+    }
+    .page-header h1 {
+      color: #FFF;
+      small {
+        color: #FFF; 
+        font-size: 30px;
+      }
+    }
+  }
+  .row2 {
+    &.jumbotron {
+      background: #f5f5f5;
+      padding: 12px 0;
+    }
+    .breadcrumb { margin-bottom: 0; }
+  }
+}
+

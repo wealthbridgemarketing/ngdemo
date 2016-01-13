@@ -1,0 +1,29 @@
+{
+  "name": "ngDemo",
+  "description": "Skeleton App for AngularJS + Bootstrap featuring bower and gulp integration plus a showcase of the various Angular libraries in use.",
+  "main": "none",
+  "moduleType": [],
+  "keywords": [
+    "angular",
+    "bootstrap",
+    "bower",
+    "gulp"
+  ],
+  "authors": [
+    "Wes Jordan"
+  ],
+  "license": "MIT",
+  "homepage": "http://localhost/ngdemo",
+  "private": true,
+  "dependencies": {
+    "angular": "1.4.8",
+    "bootstrap": "~3.3.6",
+    "angular-bootstrap": "~1.0.3",
+    "angular-ui-router": "~0.2.15",
+    "angular-css": "~1.0.7",
+    "angular-local-storage": "~0.2.3",
+    "angular-ui-grid": "~3.0.7",
+    "highcharts": "highcharts-release#~4.2.1",
+    "highcharts-ng": "~0.0.11"
+  }
+}

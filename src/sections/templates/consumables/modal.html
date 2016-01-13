@@ -1,0 +1,59 @@
+<div class="modal-header">
+  <h3 class="modal-title">AngularJS Dynamic Templates</h3>
+</div>
+<div class="modal-body">
+  <p>What makes this application special is that the content was not present 
+  when the DOM was first parsed by Angular.  The templates for each media 
+  type were in a separate json file, as was the content used to populate 
+  those templates.</p>
+  
+  <p>The external files were loaded prior to the instantiation of the controller 
+  using the resolve property of this state in ui-router.  This ensures that 
+  everything the app needs is available at runtime.</p>
+  
+  <p>The LoadExternal service that I created to retrieve the files utilizes 
+  the LocalStorageService to cache the file contents.  I've extended that 
+  service to support cache expiration and each file is cached for a 
+  different length of time.</p>
+  
+  The view is created using a custom directive and the ng-repeat attribute.
+  <pre>&lt;content-item ng-repeat="item in content" content="item">&lt;/content-item></pre>
+  
+  The directive does the following to attach the template and bind it to the content.
+  <ul>
+    <li>The content attribute in the directive passes the item to the directive.</li>
+    <li>The directive reads the content-type property of the item and retrieves 
+    the template for that type.</li>
+    <li>The template is added to the DOM.</li>
+    <li>The item properties are bound to the template using compile.</li>
+  </ul>
+  
+  <p>This technique was adapted from the following article:<br />
+  <a href="http://onehungrymind.com/angularjs-dynamic-templates/" target="_blank">http://onehungrymind.com/angularjs-dynamic-templates/</a></p>
+  
+  <p>Demo Roadmap:</p>
+  <ul>
+    <li>
+      <span class="glyphicon glyphicon-check" aria-hidden="true"></span>&nbsp;
+      Manipulate this data set to show that the fields are bound. <a ng-click="changeModel()">Change Model</a>
+    </li>
+    <li>
+      <span class="glyphicon glyphicon-check" aria-hidden="true"></span>&nbsp;
+      Load a diff data set and see it change. <a ng-click="loadNewModel()">Load New Model</a>
+    </li>
+    <li>Using the Dashboard:
+      <ul>
+        <li>1. Retrieve the files using the httpService.</li>
+        <li>
+          <span class="glyphicon glyphicon-check" aria-hidden="true"></span>&nbsp;
+          2. Store the templates using the localStorageService since they won't be changed.
+        </li>
+      </ul>
+    </li>
+  </ul>
+
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary" type="button" ng-click="$close()">OK</button>
+  <!--<button class="btn btn-warning" type="button" ng-click="$dismiss()">Cancel</button>-->
+</div>

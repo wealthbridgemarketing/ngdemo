@@ -1,0 +1,48 @@
+Angular Project Structure
+
+<project>/
+----- build/											// used when project uses gulp or grunt
+----- src/												// where the project gets built
+---------- assets/
+--------------- bower_components
+--------------- css
+--------------- js
+--------------- images
+
+---------- components/									// reusable components like header, footer, banners, sidebars, etc.
+--------------- header/											// Theme Header
+------------------- header-view.html						//
+
+---------- sections/										// the pages (routes) of your project
+--------------- 404/												// 404 Page not found - default route
+------------------- 404-ctrl.js									// 404 page services
+------------------- 404-view.html								// 404 page view
+------------------- 404.css											// optional 404 css that gets added through route
+--------------- home/												// Home Page
+------------------- service.js								            //
+------------------- view.html							                //
+--------------- contact/										// Contact Page
+------------------- service.js							//
+------------------- contact-view.html						//
+
+---------- services/										// behind the scenes services
+--------------- core/												// coreApp: low level services - must init before other services can start - provides features to dashApp
+------------------- data.srvc.js/								// controls all data including local storage
+------------------- http.srvc.js/								// provides ajax service
+------------------- auth.srvc.js/						    // user authentication
+--------------- dash/												// dashApp: coordinators interaction between other controllers
+------------------- dashboard.srvc.js/   				//
+------------------- project.srv.js/							// services related to just this project
+--------------- util/												// utilApp: miscellaneous services
+--------------- base/												// baseApp: additional services for app.module.js
+------------------- breadcrumbs.srvc.js/ 		 		// breadcrumb service for the theme
+--------------- app.module.js								// baseApp: forward facing application - data provided by dashApp
+--------------- app.routes.js								// baseApp: application routes (states)
+
+---------- .htaccess										// mod_rewrite for routes
+---------- index.html										// application entry point
+
+----- .bowerrc               		  // send bower output to src/assets/bower_components
+----- bower.json               		// bower package
+
+

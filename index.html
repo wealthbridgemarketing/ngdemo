@@ -1,0 +1,18 @@
+<script type="text/javascript">
+var project = window.location.pathname.replace(/\//g, '');
+var siteURL = window.location.protocol + '//' + window.location.host + '/' + project + '/dist/';
+window.location.href = siteURL;
+document.write(
+'<!DOCTYPE HTML>\
+<html lang="en-US">\
+    <head>\
+        <meta charset="UTF-8">\
+        <meta http-equiv="refresh" content="1; url='+siteURL+'">\
+        <title>Page Redirection</title>\
+    </head>\
+    <body>\
+        If you are not redirected automatically, follow the <a href="'+siteURL+'">link to the website.</a>\
+    </body>\
+</html>'
+);
+</script>

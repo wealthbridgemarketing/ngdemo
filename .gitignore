@@ -1,0 +1,6 @@
+.idea
+nbproject
+node_modules
+dist/*
+stage/*
+src/assets/bower_components

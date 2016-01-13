@@ -1,0 +1,111 @@
+INSTALLING PREREQUISITES:
+
+Node Version Manager - Node.js and npm
+First go to https://nodejs.org/en/ and find the version number of the LTS.
+
+https://github.com/creationix/nvm
+Install Script: get updated script url from install page.
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.29.0/install.sh | bash
+Close and re-open your terminal
+nvm install 4.2.3
+nvm use 4.2.3
+nvm alias default 4.2.3
+
+
+Ruby - Needed for SASS
+sudo apt-get install ruby-full
+
+
+SASS
+Already Installed:
+sudo gem update sass
+
+New Install:
+http://sass-lang.com/install
+sudo gem install sass
+
+
+GIT
+sudo apt-get install git
+
+
+Gulp
+https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md
+npm install --global gulp
+
+
+Bower
+http://bower.io/#install-bower
+npm install -g bower
+
+
+GETTING STARTED:
+
+Start a new project
+src
+build
+
+Open a terminal and type: bower init (help: https://github.com/bower/spec/blob/master/json.md)
+Install package and add it to bower.json dependencies:
+bower install <package> --save
+
+Bootstrap:
+http://getbootstrap.com/
+bower install bootstrap --save
+<link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+
+AngularJS:
+bower install angular#1.4.8 --save
+<script src="/bower_components/angular/angular.min.js"></script>
+
+Angular Local Storage:
+https://github.com/grevory/angular-local-storage
+bower install angular-local-storage --save
+<script src="/bower_components/angular-local-storage/dist/angular-local-storage.min.js"></script>
+angular.module: 'LocalStorageModule'
+
+AngularUI Router:
+https://github.com/angular-ui/ui-router
+bower install angular-ui-router --save
+<script src="/bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+angular.module: 'ui.bootstrap'
+
+AngularCSS: 
+Requires AngularUI Router
+https://github.com/castillo-io/angular-css
+bower install angular-css --save
+<script src="/bower_components/angular-css/angular-css.min.js"></script>
+angular.module: 'door3.css'
+
+AngularUI UI Bootstrap:
+https://angular-ui.github.io/bootstrap/
+bower install angular-bootstrap --save
+<script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+angular.module: 'ui.bootstrap'
+
+Highcharts + Angular Highcharts-ng
+http://www.highcharts.com/
+https://github.com/pablojim/highcharts-ng
+bower install highcharts-release --save
+bower install highcharts-ng --save
+<script src="/bower_components/highcharts/highcharts.js"></script>
+<script src="/bower_components/highcharts/adapters/standalone-framework.js"></script>
+<script src="/bower_components/highcharts/modules/exporting.js"></script>  <!- Load additional modules if necessary
+<script src="/bower_components/highcharts/themes/dark-unica.js"></script>  <!- Load a theme if necessary
+<script src="/bower_components/highcharts-ng/dist/highcharts-ng.min.js"></script>
+angular.module: 'highcharts-ng'
+
+AngularUI Grid
+http://ui-grid.info/
+https://github.com/angular-ui/ui-grid
+bower install angular-ui-grid --save
+<link rel="stylesheet" type="text/css" href="/bower_components/angular-ui-grid/ui-grid.min.css">
+<script src="/bower_components/angular-ui-grid/ui-grid.min.js">
+angular.module: 'ui.grid'
+
+
+Additional Resources:
+AngularUI - http://angular-ui.github.io/
+Bower Search: http://bower.io/search/
+

@@ -1,0 +1,122 @@
+INSTALLING ON SYSTEM
+npm install -g grunt-cli
+
+PROJECT SETUP
+npm install grunt --save-dev
+
+npm install grunt-contrib-clean grunt-contrib-concat grunt-concurrent grunt-contrib-copy grunt-contrib-cssmin grunt-contrib-htmlmin grunt-contrib-imagemin grunt-contrib-jshint grunt-newer grunt-postcss grunt-replace grunt-contrib-sass grunt-contrib-uglify grunt-contrib-watch time-grunt load-grunt-tasks --save-dev
+
+grunt.loadNpmTasks('grunt-contrib-clean');
+grunt.loadNpmTasks('grunt-contrib-concat');
+grunt.loadNpmTasks('grunt-concurrent');
+grunt.loadNpmTasks('grunt-contrib-copy');
+grunt.loadNpmTasks('grunt-contrib-cssmin');
+grunt.loadNpmTasks('grunt-contrib-htmlmin');
+grunt.loadNpmTasks('grunt-contrib-imagemin');
+grunt.loadNpmTasks('grunt-contrib-jshint');
+grunt.loadNpmTasks('grunt-newer');
+grunt.loadNpmTasks('grunt-postcss');
+grunt.loadNpmTasks('grunt-replace');
+grunt.loadNpmTasks('grunt-contrib-sass');
+grunt.loadNpmTasks('grunt-contrib-uglify');
+grunt.loadNpmTasks('grunt-contrib-watch');
+
+INDIVIDUAL PACKAGE DETAILS
+
+grunt-contrib-clean
+https://github.com/gruntjs/grunt-contrib-clean
+npm install grunt-contrib-clean --save-dev
+grunt.loadNpmTasks('grunt-contrib-clean');
+
+grunt-contrib-concat
+https://github.com/gruntjs/grunt-contrib-concat
+npm install grunt-contrib-concat --save-dev
+grunt.loadNpmTasks('grunt-contrib-concat');
+
+grunt-concurrent
+https://github.com/sindresorhus/grunt-concurrent
+npm install grunt-concurrent --save-dev
+grunt.loadNpmTasks('grunt-concurrent');
+
+grunt-contrib-copy
+https://github.com/gruntjs/grunt-contrib-copy
+npm install grunt-contrib-copy --save-dev
+grunt.loadNpmTasks('grunt-contrib-copy');
+
+grunt-contrib-cssmin
+https://github.com/gruntjs/grunt-contrib-cssmin
+npm install grunt-contrib-cssmin --save-dev
+grunt.loadNpmTasks('grunt-contrib-cssmin');
+
+grunt-contrib-htmlmin
+https://github.com/gruntjs/grunt-contrib-htmlmin
+npm install grunt-contrib-htmlmin --save-dev
+grunt.loadNpmTasks('grunt-contrib-htmlmin');
+
+grunt-contrib-imagemin
+https://github.com/gruntjs/grunt-contrib-imagemin
+npm install grunt-contrib-imagemin --save-dev
+grunt.loadNpmTasks('grunt-contrib-imagemin');
+
+grunt-contrib-jshint
+https://github.com/gruntjs/grunt-contrib-jshint
+npm install grunt-contrib-jshint --save-dev
+grunt.loadNpmTasks('grunt-contrib-jshint');
+
+grunt-newer
+https://github.com/tschaub/grunt-newer
+npm install grunt-newer --save-dev
+grunt.loadNpmTasks('grunt-newer');
+
+grunt-postcss
+https://github.com/nDmitry/grunt-postcss
+npm install grunt-postcss --save-dev
+grunt.loadNpmTasks('grunt-postcss');
+
+grunt-replace
+https://github.com/outatime/grunt-replace
+npm install grunt-replace --save-dev
+grunt.loadNpmTasks('grunt-replace');
+
+grunt-contrib-sass
+https://github.com/gruntjs/grunt-contrib-sass
+npm install grunt-contrib-sass --save-dev
+grunt.loadNpmTasks('grunt-contrib-sass');
+
+grunt-contrib-uglify
+https://github.com/gruntjs/grunt-contrib-uglify
+npm install grunt-contrib-uglify --save-dev
+grunt.loadNpmTasks('grunt-contrib-uglify');
+
+grunt-contrib-watch
+https://github.com/gruntjs/grunt-contrib-watch
+npm install grunt-contrib-watch --save-dev
+grunt.loadNpmTasks('grunt-contrib-watch');
+
+
+htmlmin: {
+  minifyCSS:                      true,
+  minifyJS:                       true,
+  collapseBooleanAttributes:      true,
+  collapseWhitespace:             true,
+  removeAttributeQuotes:          true,
+  removeComments:                 true, // Only if you don't use comment directives! 
+  removeEmptyAttributes:          true,
+  removeRedundantAttributes:      true,
+  removeScriptTypeAttributes:     true,
+  removeStyleLinkTypeAttributes:  true
+}
+
+DIRECT PLUGINS:
+
+time-grunt
+https://github.com/sindresorhus/time-grunt
+npm install time-grunt --save-dev
+include at top under module.exports:
+  require('time-grunt')(grunt);
+
+load-grunt-tasks
+https://github.com/sindresorhus/load-grunt-tasks
+npm install load-grunt-tasks --save-dev
+include at top under module.exports:
+  require('load-grunt-tasks')(grunt);

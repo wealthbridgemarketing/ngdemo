@@ -1,0 +1,22 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+
+      <form name="xferForm" class="form-inline" novalidate>
+        <div class="form-group">
+          <label class="sr-only" for="inpAmt">Amount (in dollars)</label>
+          <div class="input-group">
+            <div class="input-group-addon">$</div>
+            <input type="number" ng-model="xfer.amt" ng-pattern="{{app.pattern.numeric}}" class="form-control" placeholder="Amount" id="inpAmt" required />
+            <div class="input-group-addon">.00</div>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" ng-click="doCashTransfer(xferForm.$valid)">Transfer cash</button>
+        <br /><br />
+        <uib-alert type="success" ng-show="xfer.ntc" close="xfer.ntc = false"><strong>Success!</strong> You transferred {{ xfer.txt | currency }} on {{ xfer.dte | date }}.</uib-alert>
+        <uib-alert type="danger"  ng-show="xfer.err" close="xfer.err = false"><strong>Warning!</strong> Transfer error: "{{ xfer.err }}".</uib-alert>
+      </form>
+      
+    </div>
+  </div>
+</div>

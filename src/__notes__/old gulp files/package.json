@@ -1,0 +1,19 @@
+{
+  "name": "ngDemo",
+  "version": "1.0.0",
+  "description": "Skeleton App for AngularJS + Bootstrap featuring bower and gulp integration plus a showcase of the various Angular libraries in use.",
+  "main": "none",
+  "repository": "none",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "angular",
+    "bootstrap",
+    "bower",
+    "gulp"
+  ],
+  "author": "Wes Jordan",
+  "license": "MIT",
+  "devDependencies": {}
+}

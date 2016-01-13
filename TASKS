@@ -1,0 +1,20 @@
+x Create Angular app in sandbox with header/footer them files, breadcrumb and navigation
+x Setup Router
+x Integrate and test baseApp
+x Integrate and test dashApp
+x Integrate and test coreApp
+Integrate and test httpApp
+Build, Integrate and test authApp
+Finish dashApp: app data stored here, provide access to onReady vars in the coreApp
+Finish coreApp: extend config to work correctly with page title and baseurl, onReady vars
+x Create page to build and test dynamic templates
+Extend dynamic templates to work in the parent scope
+x Add control to view that, when changed, is noticed by Filters service
+x Setup Bower, Install Libs, Integrate into app
+x Setup Grunt, Research and Install modules
+x Build Gruntfile.js
+x Configure project on GitHub
+x Setup dev environment to connect with GitHub via ssh using ~/.ssh/config
+Add project to GitHub
+Recreate app ui using new technology from sandbox
+
