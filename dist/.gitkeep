@@ -1,0 +1,8 @@
+.gitkeep is not part of git!
+
+This file is used to avoid empty directories not being added.
+
+After cloning add the following line to the bottom of your .gitignore file:
+.gitkeep
+
+Following that you can safely delete all of the .gitkeep files.

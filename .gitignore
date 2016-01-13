@@ -2,5 +2,7 @@
 nbproject
 node_modules
 dist/*
+!dist/.gitkeep
 stage/*
+!stage/.gitkeep
 src/assets/bower_components

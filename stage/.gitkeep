@@ -1,0 +1,4 @@
+.gitkeep is not part of git!
+
+This file is used to avoid empty directories not being added.
+All .gitkeep files can be removed from the project after cloning.

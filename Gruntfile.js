@@ -250,7 +250,7 @@ module.exports = function(grunt) {
           dot: true,
           expand: true,
           cwd: 'src/',
-          src: ['**/*.*', '!**/*.{scss,js,html}', '!**/*.'+imgExts, '!__notes__/**/*.*', '!assets/bower_components/**/*.*'],
+          src: ['**/*.*', '!**/.gitkeep', '!**/*.{scss,js,html}', '!**/*.'+imgExts, '!__notes__/**/*.*', '!assets/bower_components/**/*.*'],
           dest: 'dist/'
         }]
       },
@@ -265,9 +265,9 @@ module.exports = function(grunt) {
 // CLEAN - Delete files and folders
     clean: {
   	  options: { 'no-write': false }, // When true nothing is actually deleted
-      dist: { files: [{ dot: true, src: ['dist/*'] }] },
-      stage: { files: [{ dot: true, src: ['stage/*'] }] },
-      all: { files: [{ dot: true, src: ['dist/*', 'stage/*'] }] },
+      dist: { files: [{ dot: true, src: ['dist/*', '!dist/.gitkeep'] }] },
+      stage: { files: [{ dot: true, src: ['stage/*', '!stage/.gitkeep'] }] },
+      all: { files: [{ dot: true, src: ['dist/*', 'stage/*', '!dist/.gitkeep', '!stage/.gitkeep'] }] },
       stage_css_assets: ['stage/css/assets'],
       stage_css_custom: ['stage/css/custom'],
       stage_css_vendor: ['stage/css/vendor'],
