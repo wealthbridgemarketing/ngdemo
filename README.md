@@ -1,6 +1,22 @@
 ## ngDemo AngularJS App Skeleton
 This is a demo app that I use to personally learn more about AngularJS.
 
+#### PRE-REQUISITES
+The following must be properly installed in order to build this app.
+1. Node.js
+2. Bower
+3. Grunt
+
+The scss files are compiled by Grunt so installing Ruby and Sass isn't necessary.
+
+#### INSTALLATION
+Enter commands in a terminal in the project root.
+
+    bower install
+    npm install
+
+**Note:** The bower components are installed to `src/assets/bower_components/`
+
 #### GRUNT SPECIFICATION
 The Grunt environment is a work in progress and is not production ready at this time.
 
