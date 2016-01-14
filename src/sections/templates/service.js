@@ -35,8 +35,10 @@ baseApp.config(['$sceDelegateProvider', function ($sceDelegateProvider)
   $sceDelegateProvider.resourceUrlWhitelist(['self', '**']);
 }]);
 
-baseApp.controller('TemplatesCtrl', ['$state', '$scope', 'Breadcrumbs', 'DashboardSrvc', 'LoadExternal', 'appContent', 'appTemplates', '$uibModal',
-                                      function($state, $scope, Breadcrumbs, DashboardSrvc, LoadExternal, appContent, appTemplates, $uibModal) {
+baseApp.controller('TemplatesCtrl',
+['$state', '$scope', 'Breadcrumbs', 'DashboardSrvc', 'LoadExternal', 'appContent', 'appTemplates', '$uibModal', '$compile',
+function($state, $scope, Breadcrumbs, DashboardSrvc, LoadExternal, appContent, appTemplates, $uibModal, $compile) {
+
   Breadcrumbs.set([
     { text: 'AngularJS Dynamic Templates' }
   ]);
@@ -59,11 +61,12 @@ baseApp.controller('TemplatesCtrl', ['$state', '$scope', 'Breadcrumbs', 'Dashboa
   $scope.openModal = function () {
     $uibModal.open({
       templateUrl: 'sections/templates/consumables/modal.html',
+      appendTo: angular.element(document.querySelector('.ui-modal')),
       scope: $scope,
       size: 'lg'
     });
   };
-  $scope.openModal();
+  $scope.init = function () { $scope.openModal(); };
 
   // Demonstrates that the content added in directive is bound to the model
   $scope.changeModel = function() {

@@ -11,10 +11,15 @@ coreApp.constant('appConfig', {
 
 // APP CONFIGURATION
 coreApp.config(function (appConfig, localStorageServiceProvider) {
-
+  // this makes it possible to run x-debug on localhost
+  var base = appConfig.basePath,
+      host = window.location.hostname;
+  if (/^localhost:(\d{3,6})$/.test(host)) {
+    base = host.replace(/^localhost/,'') + base;
+  }
   // dynamically add the base tag to the document head
   // required by $locationProvider.html5Mode(true); set in app.routes.js for ui-router
-  angular.element(document.querySelector('head')).append('<base href="'+appConfig.basePath+'">');
+  angular.element(document.querySelector('head')).append('<base href="'+base+'">');
 
   // configure the local storage service
   localStorageServiceProvider.setStorageType( appConfig.lsType );
