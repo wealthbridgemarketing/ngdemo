@@ -20,26 +20,26 @@ var baseApp = angular.module('AnalyticsApp', ['ui.router',      // AngularUI Rou
   
 baseApp.controller('AppCtrl', ['$scope', '$rootScope', 'Breadcrumbs', 'DashboardSrvc', function($scope, $rootScope, Breadcrumbs, DashboardSrvc)
 {
-  // page title
-  $rootScope.$on('AppCtrl.setPageTitle', function(event, title) {
-    $scope.pageTitle = title;
-  });
+    // page title
+    $rootScope.$on('AppCtrl.setPageTitle', function(event, title) {
+        $scope.pageTitle = title;
+    });
 
-  // Dashboard Service
-  $scope.dash = DashboardSrvc;
-  var log = $scope.dash.log;
+    // Dashboard Service
+    $scope.dash = DashboardSrvc;
+    var log = $scope.dash.log;
 
-  // breadcrumbs
-  $scope.breadcrumbs = false;
-  $scope.$watch(function() { return Breadcrumbs.get(); }, function(newVal) {
-    $scope.breadcrumbs = newVal;
-  }, true);
+    // breadcrumbs
+    $scope.breadcrumbs = false;
+    $scope.$watch(function() { return Breadcrumbs.get(); }, function(newVal) {
+        $scope.breadcrumbs = newVal;
+    }, true);
 
-  // FilterSrvc testing
-  $scope.counter = 0;
-  $scope.increment = function() {
-    $scope.counter++;
-  };
+    // FilterSrvc testing
+    $scope.counter = 0;
+    $scope.increment = function() {
+        $scope.counter++;
+    };
 
 }]);
 

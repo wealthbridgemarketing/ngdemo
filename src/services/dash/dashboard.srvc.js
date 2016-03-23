@@ -9,22 +9,41 @@
 
 // DASHBOARD SERVICE
 dashApp.factory('DashboardSrvc',
-['$interval', 'AuthSrvc', 'DataSrvc', 'httpSrvc', 'uiSrvc', 'FilterSrvc', 'ChartSrvc', 'LayoutSrvc', 'PresetsSrvc', 'CstmViewsSrvc', 'SnapshotsSrvc', 'UserSrvc',
-function ($interval, AuthSrvc, DataSrvc, httpSrvc, uiSrvc, FilterSrvc, ChartSrvc, LayoutSrvc, PresetsSrvc, CstmViewsSrvc, SnapshotsSrvc, UserSrvc)
+['$interval', '$injector', 'AuthSrvc', 'DataSrvc', 'httpSrvc', 'uiSrvc', 'FilterSrvc', 'ChartSrvc', 'LayoutSrvc', 'PresetsSrvc', 'CstmViewsSrvc', 'SnapshotsSrvc', 'UserSrvc',
+function ($interval, $injector, AuthSrvc, DataSrvc, httpSrvc, uiSrvc, FilterSrvc, ChartSrvc, LayoutSrvc, PresetsSrvc, CstmViewsSrvc, SnapshotsSrvc, UserSrvc)
 {
-    // everything in service is made available to the AppController
+    // define the services available to the AppController
     var service = {
-        ui      : uiSrvc,
+        data    : DataSrvc.AppData,
+        model   : DataSrvc.AppDataClass,
         ls      : DataSrvc.locStorage,
-        pattern : DataSrvc.getPattern(),
+        pattern : DataSrvc.pattern,
         http    : httpSrvc,
-        fltrs   : FilterSrvc['service']
+        ui      : uiSrvc,
+        log     : uiSrvc.log,
+        filters : FilterSrvc['service']
     };
-    
     angular.extend(service, ChartSrvc, LayoutSrvc, PresetsSrvc, CstmViewsSrvc, SnapshotsSrvc, UserSrvc);
     console.log(service);
 
-    // watch for AppReadyState=true then perform each services onready procedure
+    // define the services available to app factories via their extend() method
+    var dashService = {
+        model : DataSrvc.AppDataClass,
+        ui    : uiSrvc,
+        log   : uiSrvc.log
+    };
+
+    // extend each of the custom factories
+    if (typeofObject(FilterSrvc,   'service.extend')==='function') FilterSrvc   ['service'].extend(dashService);
+    if (typeofObject(ChartSrvc,    'service.extend')==='function') ChartSrvc    ['service'].extend(dashService);
+    if (typeofObject(LayoutSrvc,   'service.extend')==='function') LayoutSrvc   ['service'].extend(dashService);
+    if (typeofObject(PresetsSrvc,  'service.extend')==='function') PresetsSrvc  ['service'].extend(dashService);
+    if (typeofObject(CstmViewsSrvc,'service.extend')==='function') CstmViewsSrvc['service'].extend(dashService);
+    if (typeofObject(SnapshotsSrvc,'service.extend')==='function') SnapshotsSrvc['service'].extend(dashService);
+    if (typeofObject(UserSrvc,     'service.extend')==='function') UserSrvc     ['service'].extend(dashService);
+
+
+    // watch for DataSrvc.AppReadyState=true then perform each services onready procedure
     var watcher = $interval(function() {
             if (DataSrvc.AppReadyState === true) { resolve(); }
         }, 100),
@@ -33,10 +52,34 @@ function ($interval, AuthSrvc, DataSrvc, httpSrvc, uiSrvc, FilterSrvc, ChartSrvc
 
             var onready;
 
-            onready = FilterSrvc['onready'];
-            httpSrvc.select(onready['api']).then(function(data) {
-                onready.init(data);
-            });
+            if (typeofObject(FilterSrvc,'onready')==='object') {
+                onready = FilterSrvc['onready'];
+                httpSrvc.select(onready['api']).then(function(data) { onready.init(data); });
+            }
+            if (typeofObject(ChartSrvc,'onready')==='object') {
+                onready = ChartSrvc['onready'];
+                httpSrvc.select(onready['api']).then(function(data) { onready.init(data); });
+            }
+            if (typeofObject(LayoutSrvc,'onready')==='object') {
+                onready = LayoutSrvc['onready'];
+                httpSrvc.select(onready['api']).then(function(data) { onready.init(data); });
+            }
+            if (typeofObject(PresetsSrvc,'onready')==='object') {
+                onready = PresetsSrvc['onready'];
+                httpSrvc.select(onready['api']).then(function(data) { onready.init(data); });
+            }
+            if (typeofObject(CstmViewsSrvc,'onready')==='object') {
+                onready = CstmViewsSrvc['onready'];
+                httpSrvc.select(onready['api']).then(function(data) { onready.init(data); });
+            }
+            if (typeofObject(SnapshotsSrvc,'onready')==='object') {
+                onready = SnapshotsSrvc['onready'];
+                httpSrvc.select(onready['api']).then(function(data) { onready.init(data); });
+            }
+            if (typeofObject(UserSrvc,'onready')==='object') {
+                onready = UserSrvc['onready'];
+                httpSrvc.select(onready['api']).then(function(data) { onready.init(data); });
+            }
         };
 
     return service;

@@ -2,11 +2,24 @@
 
 // APP CONSTANTS
 coreApp.constant('appConfig', {
-    baseTitle: 'Inteleview Analytics',
-    basePath : '/ngdemo/dist/',
-    restPath : '',
-    lsType   : 'localStorage', // localStorage or sessionStorage
-    lsPrefix : 'ngdemo'
+    baseTitle : 'Inteleview Analytics',
+    basePath  : '/ngdemo/dist/',
+    restPath  : '',
+    lsType    : 'localStorage', // localStorage or sessionStorage
+    lsPrefix  : 'ngdemo',
+    ngPatterns: {
+        email  : /^([a-z0-9_\-\.]+)[@]([a-z0-9_\-\.]{2,99})[.]([a-z0-9]{2,20})+$/gmi,
+        numeric: /^(\d+)$/gm,
+        date   : /^(0?[1-9]|1[012])[- \/.](0?[1-9]|[12][0-9]|3[01])[- \/.](19|20)?([0-9]{2})$/gm,
+        phone  : {
+            us: /^\(?(\d{3})\)?[-.\s]?(\d{3})[-.\s]?(\d{4})$/gm
+        },
+        ssn    : /^(\d{3})[-.\s]?(\d{2})[-.\s]?(\d{4})$/gm,
+        url    : /^((https?:)(\/\/\/?)([\w]*(?::[\w]*)?@)?([\d\w\.-]+)(?::(\d+))?)?([\/\\\w\.()-]*)?(?:([?][^#]*)?(#.*)?)*/gmi,
+        postal : {
+            us: /^(?:(\d{4})(?:[-. ]{1}))?(\d{5})$/gm
+        }
+    }
 });
 
 // APP CONFIGURATION
@@ -29,7 +42,7 @@ coreApp.config(function (appConfig, localStorageServiceProvider) {
 });
 
 // DATA SERVICE
-coreApp.factory('DataSrvc', ['localStorageService', function (localStorageService) {
+coreApp.factory('DataSrvc', ['appConfig', 'localStorageService', function (appConfig,localStorageService) {
     /**
      * Local Storage Service
      * @link https://github.com/grevory/angular-local-storage
@@ -115,7 +128,6 @@ coreApp.factory('DataSrvc', ['localStorageService', function (localStorageServic
             return val;
         };
     };
-
     var locStorage = {
         'set'     : lsExtender.set,
         'get'     : lsExtender.get,
@@ -124,31 +136,21 @@ coreApp.factory('DataSrvc', ['localStorageService', function (localStorageServic
         'clearAll': localStorageService.clearAll
     };
 
-    // regex patterns to use with ng-pattern
-    function getPattern() {
-        return pattern;
-    }
-
-    var pattern = {
-        email  : /^([a-z0-9_\-\.]+)[@]([a-z0-9_\-\.]{2,99})[.]([a-z0-9]{2,20})+$/gmi,
-        numeric: /^(\d+)$/gm,
-        date   : /^(0?[1-9]|1[012])[- \/.](0?[1-9]|[12][0-9]|3[01])[- \/.](19|20)?([0-9]{2})$/gm,
-        phone  : {
-            us: /^\(?(\d{3})\)?[-.\s]?(\d{3})[-.\s]?(\d{4})$/gm
-        },
-        ssn    : /^(\d{3})[-.\s]?(\d{2})[-.\s]?(\d{4})$/gm,
-        url    : /^((https?:)(\/\/\/?)([\w]*(?::[\w]*)?@)?([\d\w\.-]+)(?::(\d+))?)?([\/\\\w\.()-]*)?(?:([?][^#]*)?(#.*)?)*/gmi,
-        postal : {
-            us: /^(?:(\d{4})(?:[-. ]{1}))?(\d{5})$/gm
-        }
+    // This is where the apps data is all managed
+    var appData = {},
+        clsData = {
+            save  : function(key,val) { appData[key] = val;               },
+            merge : function(key,val) { angular.merge(appData[key], val); },
+            remove: function(key)     { delete appData[key];              }
     };
 
     // define what this service offers
     var service = {
-        'LssReadyState': true,
         'AppReadyState': false,
         'locStorage'   : locStorage,
-        'getPattern'   : getPattern
+        'ngPatterns'   : appConfig.ngPatterns,
+        'AppData'      : appData,
+        'AppDataClass' : clsData
     };
 
     return service;

@@ -15,7 +15,6 @@ coreApp.factory('httpSrvc', ['DataSrvc', '$http', '$q', function (DataSrvc, $htt
     var config = {
         method: 'GET',
         url   : 'http://localhost/inteleview/analytics/backend/api/',
-        data  : {}, // obj,
         params: {}  // str || obj
     };
 
@@ -29,44 +28,46 @@ coreApp.factory('httpSrvc', ['DataSrvc', '$http', '$q', function (DataSrvc, $htt
         config.method = 'GET';
         if (isValid(api)) config.url += api;
         isValid(params) ? config.params = params : delete config.params;
-        delete config.data;
 
-        sendRequest().then(function (data) {
-            defer.resolve(data);
-        });
+        sendRequest().then(function(response) { defer.resolve(response); });
 
         return defer.promise;
     };
 
-    var apiInsert = function(data, params) {
+    var apiInsert = function(api, params) {
+        var defer = $q.defer();
+
         config.method = 'PUT';
-        if (isValid(data)) config.url = data;
+        if (isValid(data)) config.url = api;
         isValid(params) ? config.params = params : delete config.params;
 
-        sendRequest().then(function (response) {
-            return response;
-        });
+        sendRequest().then(function(response) { defer.resolve(response); });
+
+        return defer.promise;
     };
 
-    var apiUpdate = function(data, params) {
+    var apiUpdate = function(api, params) {
+        var defer = $q.defer();
+
         config.method = 'POST';
-        if (isValid(data)) config.url = data;
+        if (isValid(data)) config.url = api;
         isValid(params) ? config.params = params : delete config.params;
 
-        sendRequest().then(function (response) {
-            return response;
-        });
+        sendRequest().then(function(response) { defer.resolve(response); });
+
+        return defer.promise;
     };
 
-    var apiDelete = function(params, api) {
+    var apiDelete = function(api, params) {
+        var defer = $q.defer();
+
         config.method = 'DELETE';
         if (isValid(api)) config.url += api;
         isValid(params) ? config.params = params : delete config.params;
-        delete config.data;
 
-        sendRequest().then(function (response) {
-            return response;
-        });
+        sendRequest().then(function(response) { defer.resolve(response); });
+
+        return defer.promise;
     };
 
     //===================================================================================================
@@ -80,6 +81,7 @@ coreApp.factory('httpSrvc', ['DataSrvc', '$http', '$q', function (DataSrvc, $htt
 
     // send the $http request
     var sendRequest = function () {
+        // hack code for now
         var defer = $q.defer();
         setTimeout(function() {
             var response = { 'data': { 'a':1, 'b':2, 'c':3 } };
@@ -87,11 +89,11 @@ coreApp.factory('httpSrvc', ['DataSrvc', '$http', '$q', function (DataSrvc, $htt
         },500);
         return defer.promise;
 
-        return $http(config).then(function (response) {
-            return handleSuccess(response);
-        }, function (response) {
-            return handleError(response);
-        });
+        // return $http(config).then(function (response) {
+        //     return handleSuccess(response);
+        // }, function (response) {
+        //     return handleError(response);
+        // });
     };
 
     // request succeeded

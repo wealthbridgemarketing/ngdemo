@@ -3,12 +3,18 @@
 // DATA FILTERS SERVICE
 dashApp.factory('FilterSrvc', [function ()
 {
-    var apiEndpoint = 'filters/get/all',
-        dataModel   = {},
+    var dash = {},
+        log  = function(m){console.log(m);},
+        apiEndpoint = 'filters/get/all',
         readyState  = false;
 
+    var extend = function(services) {
+        dash = services;
+        log  = dash.log;
+    };
+
     /**
-     * Create the dataModel object
+     * Create the data object
      *
      * The DashboardSrvc waits until AppReadyState=true and then uses the onready procedure
      * to retrieve the filter data from the remote api which it passes to this function.
@@ -18,13 +24,11 @@ dashApp.factory('FilterSrvc', [function ()
     var init = function(filters)
     {
         var createModel = function() {
-            console.log('filters');
-            console.log(filters);
-            console.log(this);
-            var k = Object.keys(filters), l = k.length, i = 0, fltr;
+            log([['filters','i','silver'],filters]);
+            var k = Object.keys(filters), l = k.length, i = 0, fltr, data = {};
             for (; i<l; i++) {
                 fltr = filters[k[i]];
-                dataModel[fltr['name']] = {
+                data[fltr['name']] = {
                     'type' : fltr['type'],
                     'value': fltr['value'],
                     'label': fltr['label'],
@@ -32,26 +36,27 @@ dashApp.factory('FilterSrvc', [function ()
                     'opts' : typeofObject(fltr['opts'])==='object' ? fltr['opts'] : null
                 };
             }
+            dash.model.save('fltrs',data);
             readyState = true;
         };
 
         var getTemplate = function(filter) {
-            var tmplt  = '',
-                id     = '_fltr_'+filter['name'],
-                model  = 'dash.fltrs.data.'+filter['name']+'.value',
-                change = 'fltr-watch when-changed="dash.fltrs.change(event)"';
+            var template = '',
+                elemid   = '_fltr_'+filter['name'],
+                ngmodel  = 'data.fltrs.'+filter['name']+'.value',
+                onchange = 'fltr-watch when-changed="dash.filters.change(event)"';
 
             switch (filter['type']) {
                 case 'checkbox':
-                    tmplt = '<input type="checkbox" id="'+id+'" ng-model="'+model+'" '+change+' />';
+                    template = '<input type="checkbox" id="'+elemid+'" ng-model="'+ngmodel+'" '+onchange+' />';
                     break;
                 case 'select':
-                    var options = 'dash.fltrs.data.'+filter['name']+'.opts';
-                    tmplt = '<select id="'+id+'" ng-model="'+model+'" ng-options="opt.val as opt.lbl for opt in '+options+'" '+change+'></select>';
+                    var options = 'data.fltrs.'+filter['name']+'.opts';
+                    template = '<select id="'+elemid+'" ng-model="'+ngmodel+'" ng-options="opt.val as opt.lbl for opt in '+options+'" '+onchange+'></select>';
                     break;
             }
 
-            return tmplt;
+            return template;
         };
 
         createModel();
@@ -61,15 +66,15 @@ dashApp.factory('FilterSrvc', [function ()
     // sends the filter id to this function.  If we were instead watching the
     // filters object we wouldn't easily be able to tell what changed.
     function change(id) {
-        this.ui.log('filter id:' + id + ' has been changed', 'i', 'silver');
+        log('filter id:' + id + ' has been changed', 'i', 'green');
     }
 
     // return this factories services
     return {
         'service': {
             'ready' : readyState,
-            'data'  : dataModel,
-            'change': change
+            'change': change,
+            'extend': extend
         },
         'onready': {
             'api' : apiEndpoint,
