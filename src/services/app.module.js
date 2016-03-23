@@ -7,7 +7,7 @@
  * 3. Aid in the process of mastering AngularJS and Bootstrap.
  * 4. Break my dependency on jQuery by learning how to program without it.
  * 
- * Grunt is not being used for this application.
+ * Grunt is being used to build this application.
  */
 //===================================================================================================
 //=  BASE.APPLICATION  ==============================================================================

@@ -6,7 +6,7 @@ baseApp.factory(
       var deferred = $q.defer();
 
       var dash = DashboardSrvc,
-          data = dash.locStorage.get('TemplatesCtrl:'+lsKey),
+          data = dash.ls.get('TemplatesCtrl:'+lsKey),
           log = dash.log;
 
       //log('TemplatesCtrl:LoadExternal: "'+lsKey+'" value: '+data,'i');
@@ -14,10 +14,10 @@ baseApp.factory(
       else {
         $http.get(ajaxURI).then( function(response) {
           data = response.data;
-          dash.locStorage.set('TemplatesCtrl:'+lsKey, data, expDate);
+          dash.ls.set('TemplatesCtrl:'+lsKey, data, expDate);
 
           $timeout(function(){
-            //log('TemplatesCtrl:LoadExternal: "'+lsKey+'" set in local storage: '+dash.locStorage.get('TemplatesCtrl:'+lsKey),'i');
+            //log('TemplatesCtrl:LoadExternal: "'+lsKey+'" set in local storage: '+dash.ls.get('TemplatesCtrl:'+lsKey),'i');
             deferred.resolve(data);
           });
 

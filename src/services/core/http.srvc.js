@@ -1,101 +1,119 @@
 /* global coreApp */
 
 /**
- * httpService - Facilitates all client/server communications.
+ * httpSrvc - Facilitates all client/server communications.
  *
  * @todo Integrate the AuthFactory using:
  *       headers: {'Authorization': 'Token token=xxxxYYYYZzzz'}
  *       see: read authorization header in php: http://www.omaroid.com/php-get-and-set-custom-http-headers/
- * 
+ *
  * @todo Integrate the PersistFactory using:
  *       see: http://www.revillweb.com/angularjs-by-example/4-sharing-data-with-angularjs-services/
  */
-coreApp.factory('httpService', ['DataService', '$http', '$q', function(DataService, $http, $q)
+coreApp.factory('httpSrvc', ['DataSrvc', '$http', '$q', function (DataSrvc, $http, $q)
 {
-  var config = {
-    method : 'GET',
-    url    : 'http://localhost/inteleview/analytics/backend/api/',
-    data   : {}, // obj,
-    params : {}  // str || obj
-  };
-  
-  //===================================================================================================
-  //=  PUBLIC METHODS  ================================================================================
-  //===================================================================================================
+    var config = {
+        method: 'GET',
+        url   : 'http://localhost/inteleview/analytics/backend/api/',
+        data  : {}, // obj,
+        params: {}  // str || obj
+    };
 
-  function getData(params, qs) {
-    config.method = 'GET';
-    if (isValid(qs)) config.url += qs;
-    isValid(params) ? config.params = params : delete config.params;
-    delete config.data;
-    
-    sendRequest().then(function(response){ return response; });
-  };
+    //===================================================================================================
+    //=  PUBLIC METHODS  ================================================================================
+    //===================================================================================================
 
-  function putData(data, params) {
-    config.method = 'PUT';
-    if (isValid(data)) config.url = data;
-    isValid(params) ? config.params = params : delete config.params;
-    
-    sendRequest().then(function(response){ return response; });
-  };
+    var apiSelect = function(api, params) {
+        var defer = $q.defer();
+        
+        config.method = 'GET';
+        if (isValid(api)) config.url += api;
+        isValid(params) ? config.params = params : delete config.params;
+        delete config.data;
 
-  function postData(data, params) {
-    config.method = 'POST';
-    if (isValid(data)) config.url = data;
-    isValid(params) ? config.params = params : delete config.params;
-    
-    sendRequest().then(function(response){ return response; });
-  };
+        sendRequest().then(function (data) {
+            defer.resolve(data);
+        });
 
-  function deleteData(params, qs) {
-    config.method = 'DELETE';
-    if (isValid(qs)) config.url += qs;
-    isValid(params) ? config.params = params : delete config.params;
-    delete config.data;
-    
-    sendRequest().then(function(response){ return response; });
-  };
-  
-  //===================================================================================================
-  //=  PRIVATE METHODS  ===============================================================================
-  //===================================================================================================
-  
-  // argument validation
-  var isValid = function(val) {
-    return typeof val === undefined || val.length <= 0 ? false : true;
-  };
-  
-  // send the $http request
-  var sendRequest = function() {
-    return $http( config ).
-              then(function(response) {
-                return handleSuccess(response);
-              }, function(response) {
-                return handleError(response);
-              });    
-  };
-  
-  // request succeeded
-  var handleSuccess = function(response) {
-    return( response.data );
-  };
-  
-  // request failed
-  var handleError = function(response) {
-    if ( ! angular.isObject( response.data ) || ! response.data.message ) {
-      return( $q.reject( 'An unknown error occurred.' ) );
-    }
-    return( $q.reject( response.data.message ) );
-  };
-  
-  // Return the Service
-  var service = {
-    'getData'    : getData,
-    'putData'    : putData,
-    'postData'   : postData,
-    'deleteData' : deleteData
-  };
-  
-  return service;
+        return defer.promise;
+    };
+
+    var apiInsert = function(data, params) {
+        config.method = 'PUT';
+        if (isValid(data)) config.url = data;
+        isValid(params) ? config.params = params : delete config.params;
+
+        sendRequest().then(function (response) {
+            return response;
+        });
+    };
+
+    var apiUpdate = function(data, params) {
+        config.method = 'POST';
+        if (isValid(data)) config.url = data;
+        isValid(params) ? config.params = params : delete config.params;
+
+        sendRequest().then(function (response) {
+            return response;
+        });
+    };
+
+    var apiDelete = function(params, api) {
+        config.method = 'DELETE';
+        if (isValid(api)) config.url += api;
+        isValid(params) ? config.params = params : delete config.params;
+        delete config.data;
+
+        sendRequest().then(function (response) {
+            return response;
+        });
+    };
+
+    //===================================================================================================
+    //=  PRIVATE METHODS  ===============================================================================
+    //===================================================================================================
+
+    // argument validation
+    var isValid = function (val) {
+        return !!(typeof val !== 'undefined' && val.length > 0);
+    };
+
+    // send the $http request
+    var sendRequest = function () {
+        var defer = $q.defer();
+        setTimeout(function() {
+            var response = { 'data': { 'a':1, 'b':2, 'c':3 } };
+            defer.resolve( handleSuccess(response) );
+        },500);
+        return defer.promise;
+
+        return $http(config).then(function (response) {
+            return handleSuccess(response);
+        }, function (response) {
+            return handleError(response);
+        });
+    };
+
+    // request succeeded
+    var handleSuccess = function (response) {
+        return ( response.data );
+    };
+
+    // request failed
+    var handleError = function (response) {
+        if (!angular.isObject(response.data) || !response.data.message) {
+            return ( $q.reject('An unknown error occurred.') );
+        }
+        return ( $q.reject(response.data.message) );
+    };
+
+    // Return the Service
+    var service = {
+        'select': apiSelect,
+        'insert': apiInsert,
+        'update': apiUpdate,
+        'delete': apiDelete
+    };
+
+    return service;
 }]);
