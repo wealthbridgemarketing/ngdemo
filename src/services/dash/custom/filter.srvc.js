@@ -15,10 +15,6 @@ dashApp.factory('FilterSrvc', [function ()
 
     /**
      * Create the data object
-     *
-     * The DashboardSrvc waits until AppReadyState=true and then uses the onready procedure
-     * to retrieve the filter data from the remote api which it passes to this function.
-
      * @param {object} filters
      */
     var init = function(filters)
@@ -73,12 +69,12 @@ dashApp.factory('FilterSrvc', [function ()
     return {
         'service': {
             'ready' : readyState,
-            'change': change,
-            'extend': extend
+            'change': change
         },
         'onready': {
-            'api' : apiEndpoint,
-            'init': init
+            'api'   : apiEndpoint,
+            'init'  : init,
+            'extend': extend
         }
     };
 }]);
