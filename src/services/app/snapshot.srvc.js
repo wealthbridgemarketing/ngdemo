@@ -1,13 +1,12 @@
-/* global dashApp */
+/* global mainApp */
 
-// CHARTS SERVICE
-dashApp.factory('ChartSrvc', [function ()
+// SNAPSHOT SERVICE
+mainApp.factory('SnapshotsSrvc', [function () 
 {
     var dash = {},
         log  = function(m){console.log(m);},
-        apiEndpoint = 'chartdefs/get/all',
+        apiEndpoint = 'snapshots/get/all',
         readyState  = false;
-
 
     var extend = function (services) {
         dash = services;
@@ -16,19 +15,19 @@ dashApp.factory('ChartSrvc', [function ()
 
     /**
      * Create the data object
-     * @param {object} chartdefs
+     * @param {object} snapshots
      */
-    var init = function (chartdefs) {
+    var init = function (snapshots) {
         var createModel = function () {
-            log([['chartdefs', 'i', 'silver'], chartdefs]);
-            var k = Object.keys(chartdefs), l = k.length, i = 0, chart, data = {};
+            log([['snapshots', 'i', 'silver'], snapshots]);
+            var k = Object.keys(snapshots), l = k.length, i = 0, snapshot, data = {};
             for (; i < l; i++) {
-                chart               = chartdefs[k[i]];
-                data[chart['name']] = {
+                snapshot               = snapshots[k[i]];
+                data[snapshot['name']] = {
                     'xyz': chart['xyz']
                 };
             }
-            dash.model.save('charts', data);
+            dash.model.save('snapshots', data);
             readyState = true;
         };
 

@@ -1,7 +1,7 @@
-/* global dashApp */
+/* global mainApp */
 
 // CUSTOM VIEW SERVICE
-dashApp.factory('CstmViewsSrvc', [function () 
+mainApp.factory('CstmViewsSrvc', [function () 
 {
     var dash = {},
         log  = function(m){console.log(m);},

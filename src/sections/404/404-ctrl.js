@@ -1,6 +1,6 @@
-/* global baseApp */
+/* global siteApp */
 
-baseApp.controller('404Ctrl', ['$scope', 'Breadcrumbs', function($scope, Breadcrumbs) {
+siteApp.controller('404Ctrl', ['$scope', 'Breadcrumbs', function($scope, Breadcrumbs) {
     
     Breadcrumbs.clear();
     

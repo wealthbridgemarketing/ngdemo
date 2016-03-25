@@ -1,11 +1,11 @@
-/* global dashApp, baseApp */
+/* global mainApp, siteApp */
 
-// DATA FILTERS SERVICE
-dashApp.factory('FilterSrvc', [function ()
+// DATA drills SERVICE
+mainApp.factory('DrillSrvc', [function ()
 {
     var dash = {},
         log  = function(m){console.log(m);},
-        apiEndpoint = 'filters/get/all',
+        apiEndpoint = 'drills/get/all',
         readyState  = false;
 
     var extend = function(services) {
@@ -15,15 +15,15 @@ dashApp.factory('FilterSrvc', [function ()
 
     /**
      * Create the data object
-     * @param {object} filters
+     * @param {object} drills
      */
-    var init = function(filters)
+    var init = function(drills)
     {
         var createModel = function() {
-            log([['filters','i','silver'],filters]);
-            var k = Object.keys(filters), l = k.length, i = 0, fltr, data = {};
+            log([['drills','i','silver'],drills]);
+            var k = Object.keys(drills), l = k.length, i = 0, fltr, data = {};
             for (; i<l; i++) {
-                fltr = filters[k[i]];
+                fltr = drills[k[i]];
                 data[fltr['name']] = {
                     'type' : fltr['type'],
                     'value': fltr['value'],
@@ -36,18 +36,18 @@ dashApp.factory('FilterSrvc', [function ()
             readyState = true;
         };
 
-        var getTemplate = function(filter) {
+        var getTemplate = function(drill) {
             var template = '',
-                elemid   = '_fltr_'+filter['name'],
-                ngmodel  = 'data.fltrs.'+filter['name']+'.value',
-                onchange = 'fltr-watch when-changed="dash.filters.change(event)"';
+                elemid   = '_fltr_'+drill['name'],
+                ngmodel  = 'data.fltrs.'+drill['name']+'.value',
+                onchange = 'fltr-watch when-changed="dash.drills.change(event)"';
 
-            switch (filter['type']) {
+            switch (drill['type']) {
                 case 'checkbox':
                     template = '<input type="checkbox" id="'+elemid+'" ng-model="'+ngmodel+'" '+onchange+' />';
                     break;
                 case 'select':
-                    var options = 'data.fltrs.'+filter['name']+'.opts';
+                    var options = 'data.fltrs.'+drill['name']+'.opts';
                     template = '<select id="'+elemid+'" ng-model="'+ngmodel+'" ng-options="opt.val as opt.lbl for opt in '+options+'" '+onchange+'></select>';
                     break;
             }
@@ -58,11 +58,11 @@ dashApp.factory('FilterSrvc', [function ()
         createModel();
     };
 
-    // An onchange event attached is to each filter on the dashboard. That event
-    // sends the filter id to this function.  If we were instead watching the
-    // filters object we wouldn't easily be able to tell what changed.
+    // An onchange event attached is to each drill on the dashboard. That event
+    // sends the drill id to this function.  If we were instead watching the
+    // drills object we wouldn't easily be able to tell what changed.
     function change(id) {
-        log('filter id:' + id + ' has been changed', 'i', 'green');
+        log('drill id:' + id + ' has been changed', 'i', 'green');
     }
 
     // return this factories services
@@ -80,7 +80,7 @@ dashApp.factory('FilterSrvc', [function ()
 }]);
 
 
-baseApp.directive('fltrWatch', [function () {
+siteApp.directive('drillWatch', [function () {
     return {
         restrict: 'A',
         scope: {

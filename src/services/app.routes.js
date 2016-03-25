@@ -1,7 +1,7 @@
-/* global baseApp */
+/* global siteApp */
 
 // configure our routes
-baseApp.config(function($locationProvider, $stateProvider, $urlRouterProvider) {
+siteApp.config(function($locationProvider, $stateProvider, $urlRouterProvider) {
 
   $locationProvider.html5Mode(true);
   

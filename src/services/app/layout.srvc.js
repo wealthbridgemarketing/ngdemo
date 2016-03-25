@@ -1,7 +1,7 @@
-/* global dashApp */
+/* global mainApp */
 
 // LAYOUT SERVICE
-dashApp.factory('LayoutSrvc', [function () 
+mainApp.factory('LayoutSrvc', [function () 
 {
     var dash = {},
         log  = function(m){console.log(m);},

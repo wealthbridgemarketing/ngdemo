@@ -9,54 +9,43 @@
  * 
  * Grunt is being used to build this application.
  */
-//===================================================================================================
-//=  BASE.APPLICATION  ==============================================================================
-//===================================================================================================
-var baseApp = angular.module('AnalyticsApp', ['ui.router',      // AngularUI Router - Replacement for ngRoute (https://github.com/angular-ui/ui-router)
+var coreApp = angular.module('app.core', ['LocalStorageModule']);
+var mainApp = angular.module('app.main', ['app.core']);
+var siteApp = angular.module('AnalyticsApp', ['ui.router',      // AngularUI Router - Replacement for ngRoute (https://github.com/angular-ui/ui-router)
                                               'door3.css',      // AngularCSS: Dynamically inject stylesheets as needed (https://github.com/castillo-io/angular-css)
                                               'ui.bootstrap',   // UI Bootstrap: Bootstrap components written in AngularJS (http://angular-ui.github.io/bootstrap)
                                               'app.core',
-                                              'app.services']);
-  
-baseApp.controller('AppCtrl', ['$scope', '$rootScope', 'Breadcrumbs', 'DashboardSrvc', function($scope, $rootScope, Breadcrumbs, DashboardSrvc)
-{
-    // page title
-    $rootScope.$on('AppCtrl.setPageTitle', function(event, title) {
-        $scope.pageTitle = title;
+                                              'app.main']);
+
+// APP CONSTANTS
+coreApp.constant('appConfig', {
+    baseTitle : 'Inteleview Analytics',
+    basePath  : '/ngdemo/dist/',
+    restPath  : '',
+    lsType    : 'localStorage', // localStorage or sessionStorage
+    lsPrefix  : 'ngdemo',
+    ngPatterns: {
+        email  : /^([a-z0-9_\-\.]+)[@]([a-z0-9_\-\.]{2,99})[.]([a-z0-9]{2,20})+$/gmi,
+        numeric: /^(\d+)$/gm,
+        date   : /^(0?[1-9]|1[012])[- \/.](0?[1-9]|[12][0-9]|3[01])[- \/.](19|20)?([0-9]{2})$/gm,
+        phone  : {
+            us: /^\(?(\d{3})\)?[-.\s]?(\d{3})[-.\s]?(\d{4})$/gm
+        },
+        ssn    : /^(\d{3})[-.\s]?(\d{2})[-.\s]?(\d{4})$/gm,
+        url    : /^((https?:)(\/\/\/?)([\w]*(?::[\w]*)?@)?([\d\w\.-]+)(?::(\d+))?)?([\/\\\w\.()-]*)?(?:([?][^#]*)?(#.*)?)*/gmi,
+        postal : {
+            us: /^(?:(\d{4})(?:[-. ]{1}))?(\d{5})$/gm
+        }
+    }
+});
+
+// PAGE TITLE - set using data.title of current state in ui-router
+siteApp.run(['$rootScope', 'appConfig', function($rootScope, appConfig) {
+    $rootScope.$on('$stateChangeSuccess', function (event, toState) {
+        var b = appConfig.baseTitle,
+            p = toState.data.title,
+            t = b;
+        if (p!==undefined && p!=='') t = p+' | '+b;
+        $rootScope.$emit('AppCtrl.setPageTitle', [t]);
     });
-
-    // Dashboard Service
-    $scope.dash = DashboardSrvc;
-    var log = $scope.dash.log;
-
-    // breadcrumbs
-    $scope.breadcrumbs = false;
-    $scope.$watch(function() { return Breadcrumbs.get(); }, function(newVal) {
-        $scope.breadcrumbs = newVal;
-    }, true);
-
-    // FilterSrvc testing
-    $scope.counter = 0;
-    $scope.increment = function() {
-        $scope.counter++;
-    };
-
 }]);
-
-// page title set using data.title of current state in ui-router
-baseApp.run(['$rootScope', 'appConfig', function($rootScope, appConfig) {
-  $rootScope.$on('$stateChangeSuccess', function (event, toState) {
-    var b = appConfig.baseTitle,
-        p = toState.data.title,
-        t = b;
-    if (p!==undefined && p!=='') t = p+' | '+b;
-    $rootScope.$emit('AppCtrl.setPageTitle', [t]);
-  });
-}]);
-
-//===================================================================================================
-//=  ADDITIONAL APPLICATIONS - Created here for use with Grunt  =====================================
-//===================================================================================================
-var coreApp = angular.module('app.core', ['LocalStorageModule']);
-var dashApp = angular.module('app.services', ['app.core','app.utils']);
-var utilApp = angular.module('app.utils', ['app.core']);

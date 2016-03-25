@@ -1,11 +1,11 @@
-/* global baseApp */
+/* global siteApp */
 
-baseApp.factory(
-  'LoadExternal', ['$http', '$q', '$timeout', '$log', 'DashboardSrvc', function ($http, $q, $timeout, $log, DashboardSrvc) {
+siteApp.factory(
+  'LoadExternal', ['$http', '$q', '$timeout', '$log', 'MainSrvc', function ($http, $q, $timeout, $log, MainSrvc) {
     var load = function (ajaxURI, lsKey, expDate) {
       var deferred = $q.defer();
 
-      var dash = DashboardSrvc,
+      var dash = MainSrvc,
           data = dash.ls.get('TemplatesCtrl:'+lsKey),
           log = dash.log;
 
@@ -30,21 +30,21 @@ baseApp.factory(
     return { load: load };
   }]);
 
-baseApp.config(['$sceDelegateProvider', function ($sceDelegateProvider) 
+siteApp.config(['$sceDelegateProvider', function ($sceDelegateProvider) 
 {
   $sceDelegateProvider.resourceUrlWhitelist(['self', '**']);
 }]);
 
-baseApp.controller('TemplatesCtrl',
-['$state', '$scope', 'Breadcrumbs', 'DashboardSrvc', 'LoadExternal', 'appContent', 'appTemplates', '$uibModal', '$compile',
-function($state, $scope, Breadcrumbs, DashboardSrvc, LoadExternal, appContent, appTemplates, $uibModal, $compile) {
+siteApp.controller('TemplatesCtrl',
+['$state', '$scope', 'Breadcrumbs', 'MainSrvc', 'LoadExternal', 'appContent', 'appTemplates', '$uibModal', '$compile',
+function($state, $scope, Breadcrumbs, MainSrvc, LoadExternal, appContent, appTemplates, $uibModal, $compile) {
 
   Breadcrumbs.set([
     { text: 'AngularJS Dynamic Templates' }
   ]);
 
   // alias the Dashboard Service
-  $scope.dash = DashboardSrvc;
+  $scope.dash = MainSrvc;
   var log = $scope.dash.log;
 
   /**
@@ -85,7 +85,7 @@ function($state, $scope, Breadcrumbs, DashboardSrvc, LoadExternal, appContent, a
 
 }]);
 
-baseApp.directive('contentItem', ['$state', '$compile', function ($state, $compile)
+siteApp.directive('contentItem', ['$state', '$compile', function ($state, $compile)
 {
   var linker = function (scope, element, attrs) {
     scope.rootDirectory = $state.current.data.imagePath;

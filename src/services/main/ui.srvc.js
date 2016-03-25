@@ -103,7 +103,7 @@
  *          Then add the open method to both the $http success and error handlers.  If another call is made
  *          after the api returns, use the append method to update the panel as necessary.
  */
-baseApp.factory('uiSrvc', ['$rootScope', '$log', '$filter', 'uiConfirm',
+siteApp.factory('uiSrvc', ['$rootScope', '$log', '$filter', 'uiConfirm',
     function ($rootScope, $log, $filter, uiConfirm) {
 
         // get url parameter: var url_user_id = ui.qs['user_id']
@@ -518,7 +518,7 @@ baseApp.factory('uiSrvc', ['$rootScope', '$log', '$filter', 'uiConfirm',
 /**
  * Provides the uiSrvc.confirm dialog service.
  */
-baseApp.service('uiConfirm',
+siteApp.service('uiConfirm',
   ['$uibModal', function ($uibModal) {
 
       var modalOptions = {
@@ -564,7 +564,7 @@ baseApp.service('uiConfirm',
   }]
 );
 
-baseApp.directive('uiPanel',
+siteApp.directive('uiPanel',
   ['uiSrvc', function (uiSrvc) {
       return {
           restrict   : 'E',

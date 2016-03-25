@@ -1,6 +1,6 @@
-/* global baseApp */
+/* global siteApp */
 
-baseApp.controller('AnalyticsCtrl', ['$scope', 'Breadcrumbs', function($scope, Breadcrumbs) {
+siteApp.controller('AnalyticsCtrl', ['$scope', 'Breadcrumbs', function($scope, Breadcrumbs) {
 
   Breadcrumbs.set([
     { text: 'Analytics' }

@@ -1,27 +1,5 @@
 /* global coreApp */
 
-// APP CONSTANTS
-coreApp.constant('appConfig', {
-    baseTitle : 'Inteleview Analytics',
-    basePath  : '/ngdemo/dist/',
-    restPath  : '',
-    lsType    : 'localStorage', // localStorage or sessionStorage
-    lsPrefix  : 'ngdemo',
-    ngPatterns: {
-        email  : /^([a-z0-9_\-\.]+)[@]([a-z0-9_\-\.]{2,99})[.]([a-z0-9]{2,20})+$/gmi,
-        numeric: /^(\d+)$/gm,
-        date   : /^(0?[1-9]|1[012])[- \/.](0?[1-9]|[12][0-9]|3[01])[- \/.](19|20)?([0-9]{2})$/gm,
-        phone  : {
-            us: /^\(?(\d{3})\)?[-.\s]?(\d{3})[-.\s]?(\d{4})$/gm
-        },
-        ssn    : /^(\d{3})[-.\s]?(\d{2})[-.\s]?(\d{4})$/gm,
-        url    : /^((https?:)(\/\/\/?)([\w]*(?::[\w]*)?@)?([\d\w\.-]+)(?::(\d+))?)?([\/\\\w\.()-]*)?(?:([?][^#]*)?(#.*)?)*/gmi,
-        postal : {
-            us: /^(?:(\d{4})(?:[-. ]{1}))?(\d{5})$/gm
-        }
-    }
-});
-
 // APP CONFIGURATION
 coreApp.config(function (appConfig, localStorageServiceProvider) {
     var base = appConfig.basePath,
@@ -56,8 +34,8 @@ coreApp.factory('DataSrvc', ['appConfig', 'localStorageService', function (appCo
          * Set local storage var with optional expiration period
          *
          * @example
-         * DashboardSrvc.locStorage.set('myTemplate', tmplHtml);
-         * DashboardSrvc.locStorage.set('myUniqueKey', myVar, '1 day');
+         * MainSrvc.locStorage.set('myTemplate', tmplHtml);
+         * MainSrvc.locStorage.set('myUniqueKey', myVar, '1 day');
          *
          * @param {string} key
          * @param {(string|number|boolean|date|object)} val

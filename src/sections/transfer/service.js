@@ -1,6 +1,6 @@
-/* global baseApp */
+/* global siteApp */
 
-baseApp.controller('XferCtrl', ['$scope', 'Breadcrumbs', function($scope, Breadcrumbs) {
+siteApp.controller('XferCtrl', ['$scope', 'Breadcrumbs', function($scope, Breadcrumbs) {
 
   Breadcrumbs.set([
     { text: 'Transfer Cash' }

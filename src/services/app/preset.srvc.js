@@ -1,12 +1,13 @@
-/* global dashApp */
+/* global mainApp */
 
-// SNAPSHOT SERVICE
-dashApp.factory('SnapshotsSrvc', [function () 
+// PRESET VIEW SERVICE
+mainApp.factory('PresetsSrvc', [function () 
 {
     var dash = {},
         log  = function(m){console.log(m);},
-        apiEndpoint = 'snapshots/get/all',
+        apiEndpoint = 'presets/get/all',
         readyState  = false;
+
 
     var extend = function (services) {
         dash = services;
@@ -15,19 +16,19 @@ dashApp.factory('SnapshotsSrvc', [function ()
 
     /**
      * Create the data object
-     * @param {object} snapshots
+     * @param {object} presets
      */
-    var init = function (snapshots) {
+    var init = function (presets) {
         var createModel = function () {
-            log([['snapshots', 'i', 'silver'], snapshots]);
-            var k = Object.keys(snapshots), l = k.length, i = 0, snapshot, data = {};
+            log([['presets', 'i', 'silver'], presets]);
+            var k = Object.keys(presets), l = k.length, i = 0, preset, data = {};
             for (; i < l; i++) {
-                snapshot               = snapshots[k[i]];
-                data[snapshot['name']] = {
+                preset               = presets[k[i]];
+                data[preset['name']] = {
                     'xyz': chart['xyz']
                 };
             }
-            dash.model.save('snapshots', data);
+            dash.model.save('presets', data);
             readyState = true;
         };
 

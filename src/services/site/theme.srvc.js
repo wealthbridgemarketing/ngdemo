@@ -1,4 +1,4 @@
-/* global baseApp */
+/* global siteApp */
 
 /**
  * Used to manage $scope.breadcrumbs in AppCtrl
@@ -20,7 +20,7 @@
     }]);
  *
  */
-baseApp.service('Breadcrumbs', [function() {
+siteApp.service('Breadcrumbs', [function() {
   
   var breadcrumbs = false;
   

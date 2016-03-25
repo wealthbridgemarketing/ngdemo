@@ -10,8 +10,8 @@ module.exports = function (grunt) {
     //var appBanner = '/*! <%= pkg.name %> - Copyright '+'<%= grunt.template.today("yyyy") %>'+'. All Rights Reserved. Created By: '+'<%= pkg.author.name %>'+' <%= pkg.author.url %> - build: ' + '<%= grunt.template.today("yymmdd") %> */\n';
 
     var appjsSrcDef = [
-        'assets/js/**/*.js', 'services/*.js', 'services/base/**/*.js', 'services/core/**/*.js',
-        'services/dash/**/*.js', 'services/util/**/*.js', 'components/**/*.js', 'sections/**/*.js'
+        'assets/js/**/*.js', 'services/*.js', 'services/core/**/*.js', 'services/main/**/*.js',
+        'services/site/**/*.js', 'services/app/**/*.js', 'components/**/*.js', 'sections/**/*.js'
     ];
 
     var appjsSrcDef2 = appjsSrcDef.map(function (path) {

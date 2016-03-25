@@ -26,18 +26,18 @@ Angular Project Structure
 ------------------- contact-view.html						//
 
 ---------- services/										// behind the scenes services
---------------- core/												// coreApp: low level services - must init before other services can start - provides features to dashApp
+--------------- core/												// coreApp: low level services - must init before other services can start - provides features to mainApp
 ------------------- data.srvc.js/								// controls all data including local storage
 ------------------- http.srvc.js/								// provides ajax service
 ------------------- auth.srvc.js/						    // user authentication
---------------- dash/												// dashApp: coordinators interaction between other controllers
-------------------- dashboard.srvc.js/   				//
+--------------- dash/												// mainApp: coordinators interaction between other controllers
+------------------- main.srvc.js/   				//
 ------------------- project.srv.js/							// services related to just this project
---------------- util/												// utilApp: miscellaneous services
---------------- base/												// baseApp: additional services for app.module.js
+--------------- util/												// siteApp: miscellaneous services
+--------------- base/												// siteApp: additional services for app.module.js
 ------------------- breadcrumbs.srvc.js/ 		 		// breadcrumb service for the theme
---------------- app.module.js								// baseApp: forward facing application - data provided by dashApp
---------------- app.routes.js								// baseApp: application routes (states)
+--------------- app.module.js								// siteApp: forward facing application - data provided by mainApp
+--------------- app.routes.js								// siteApp: application routes (states)
 
 ---------- .htaccess										// mod_rewrite for routes
 ---------- index.html										// application entry point

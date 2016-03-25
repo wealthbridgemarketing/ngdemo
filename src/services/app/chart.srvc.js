@@ -1,11 +1,11 @@
-/* global dashApp */
+/* global mainApp */
 
-// PRESET VIEW SERVICE
-dashApp.factory('PresetsSrvc', [function () 
+// CHARTS SERVICE
+mainApp.factory('ChartSrvc', [function ()
 {
     var dash = {},
         log  = function(m){console.log(m);},
-        apiEndpoint = 'presets/get/all',
+        apiEndpoint = 'chartdefs/get/all',
         readyState  = false;
 
 
@@ -16,19 +16,19 @@ dashApp.factory('PresetsSrvc', [function ()
 
     /**
      * Create the data object
-     * @param {object} presets
+     * @param {object} chartdefs
      */
-    var init = function (presets) {
+    var init = function (chartdefs) {
         var createModel = function () {
-            log([['presets', 'i', 'silver'], presets]);
-            var k = Object.keys(presets), l = k.length, i = 0, preset, data = {};
+            log([['chartdefs', 'i', 'silver'], chartdefs]);
+            var k = Object.keys(chartdefs), l = k.length, i = 0, chart, data = {};
             for (; i < l; i++) {
-                preset               = presets[k[i]];
-                data[preset['name']] = {
+                chart               = chartdefs[k[i]];
+                data[chart['name']] = {
                     'xyz': chart['xyz']
                 };
             }
-            dash.model.save('presets', data);
+            dash.model.save('charts', data);
             readyState = true;
         };
 

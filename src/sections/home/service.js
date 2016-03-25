@@ -1,6 +1,6 @@
-/* global baseApp */
+/* global siteApp */
 
-baseApp.controller('HomeCtrl', ['$scope', 'Breadcrumbs', function($scope, Breadcrumbs) {
+siteApp.controller('HomeCtrl', ['$scope', 'Breadcrumbs', function($scope, Breadcrumbs) {
     
     Breadcrumbs.clear();
     
