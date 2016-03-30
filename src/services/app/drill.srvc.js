@@ -1,16 +1,16 @@
-/* global mainApp, siteApp */
+/* global baseApp, siteApp */
 
 // DATA drills SERVICE
-mainApp.factory('DrillSrvc', [function ()
+baseApp.factory('DrillSrvc', [function ()
 {
-    var dash = {},
+    var base = {},
         log  = function(m){console.log(m);},
         apiEndpoint = 'drills/get/all',
         readyState  = false;
 
     var extend = function(services) {
-        dash = services;
-        log  = dash.log;
+        base = services;
+        log  = base.log;
     };
 
     /**
@@ -32,7 +32,7 @@ mainApp.factory('DrillSrvc', [function ()
                     'opts' : typeofObject(fltr['opts'])==='object' ? fltr['opts'] : null
                 };
             }
-            dash.model.save('fltrs',data);
+            base.model.save('fltrs',data);
             readyState = true;
         };
 
@@ -40,7 +40,7 @@ mainApp.factory('DrillSrvc', [function ()
             var template = '',
                 elemid   = '_fltr_'+drill['name'],
                 ngmodel  = 'data.fltrs.'+drill['name']+'.value',
-                onchange = 'fltr-watch when-changed="dash.drills.change(event)"';
+                onchange = 'fltr-watch when-changed="base.drills.change(event)"';
 
             switch (drill['type']) {
                 case 'checkbox':
@@ -58,11 +58,20 @@ mainApp.factory('DrillSrvc', [function ()
         createModel();
     };
 
-    // An onchange event attached is to each drill on the dashboard. That event
+    // An onchange event attached is to each drill in the view. That event
     // sends the drill id to this function.  If we were instead watching the
     // drills object we wouldn't easily be able to tell what changed.
-    function change(id) {
-        log('drill id:' + id + ' has been changed', 'i', 'green');
+    function change(ele) {
+        switch (ele['type']) {
+            case 'checkbox':
+                log('DRILL CHANGE EVENT. '+ele['type']+' '+ele['name']+'['+ele['id']+'] = '+ele['value'], 'i', 'green');
+                break;
+            case 'select':
+                var idx = !!ele['id'] ? ele['id'] : ele['name'];
+                log('DRILL CHANGE EVENT. '+ele['type']+' '+idx+' = '+ele['value'], 'i', 'green');
+            default:
+                log('UNKNOWN DRILL CHANGE EVENT. type: '+ele['type']+' name: '+ele['name']+' id: '+ele['id']+' value: '+ele['value'], 'w', 'red');
+        }
     }
 
     // return this factories services
@@ -88,8 +97,9 @@ siteApp.directive('drillWatch', [function () {
         },
         link: function (scope, element, attrs) {
             element.on('change', function (event) {
-                var id = event.target.id.replace(/\D/g, '');
-                scope.whenChanged({event: id});
+                //console.log(event);
+                var value = event.target.type==='checkbox' ? event.target.checked : event.target.value;
+                scope.whenChanged({event: {'type':event.target.type, 'name':event.target.name, 'id':event.target.id, 'value':value}});
                 scope.$apply();
             });
         }

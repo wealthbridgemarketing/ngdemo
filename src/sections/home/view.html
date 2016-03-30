@@ -42,9 +42,9 @@
   <div class="row">
     <div class="col-xs-12">
 
-      <input type="checkbox" ng-model="mychkbox" id="ng-change-ex1" drill-watch when-changed="dash.drills.change(event)" />
-      <input type="checkbox" ng-model="mychkbox" id="ng-change-ex2" ng-change="increment()" />
-      <input type="checkbox" ng-model="mychkbox" id="ng-change-ex3" /><br />
+      <input type="checkbox" ng-model="mychkbox" name="ng-change-ex" id="1" drill-watch when-changed="base.drills.change(event)" />
+      <input type="checkbox" ng-model="mychkbox" name="ng-change-ex" id="2" drill-watch when-changed="base.drills.change(event)" ng-change="increment()" />
+      <input type="checkbox" ng-model="mychkbox" name="ng-change-ex" id="3" drill-watch when-changed="base.drills.change(event)" /><br />
       <tt>chk-2 = {{mychkbox}}</tt><br/>
       <tt>counter = {{counter}}</tt><br/>
 

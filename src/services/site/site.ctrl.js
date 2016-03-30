@@ -1,15 +1,15 @@
 /* global siteApp */
 
-siteApp.controller('AppCtrl', ['$scope', '$rootScope', 'Breadcrumbs', 'MainSrvc', function($scope, $rootScope, Breadcrumbs, MainSrvc)
+siteApp.controller('SiteCtrl', ['$scope', '$rootScope', 'Breadcrumbs', 'BaseSrvc', function($scope, $rootScope, Breadcrumbs, BaseSrvc)
 {
   // page title
-  $rootScope.$on('AppCtrl.setPageTitle', function(event, title) {
+  $rootScope.$on('SiteCtrl.setPageTitle', function(event, title) {
     $scope.pageTitle = title;
   });
 
-  // Dashboard Service
-  $scope.dash = MainSrvc;
-  var log = $scope.dash.log;
+  // Base Service
+  $scope.base = BaseSrvc;
+  var log = $scope.base.log;
 
   // breadcrumbs
   $scope.breadcrumbs = false;

@@ -7,15 +7,19 @@ module.exports = function (grunt) {
     require('load-grunt-tasks')(grunt);
 
     // variables used within the tasks
-    //var appBanner = '/*! <%= pkg.name %> - Copyright '+'<%= grunt.template.today("yyyy") %>'+'. All Rights Reserved. Created By: '+'<%= pkg.author.name %>'+' <%= pkg.author.url %> - build: ' + '<%= grunt.template.today("yymmdd") %> */\n';
+    var appBanner = '/*! <%= pkg.name %> - Copyright '+'<%= grunt.template.today("yyyy") %>'+'. All Rights Reserved. Created By: '+'<%= pkg.author.name %>'+' <%= pkg.author.url %> - build: ' + '<%= grunt.template.today("yymmdd") %> */\n';
 
     var appjsSrcDef = [
-        'assets/js/**/*.js', 'services/*.js', 'services/core/**/*.js', 'services/main/**/*.js',
-        'services/site/**/*.js', 'services/app/**/*.js', 'components/**/*.js', 'sections/**/*.js'
+        'assets/js/**/*.js',
+        'services/app.module.js', 'services/app.routes.js',
+        'services/core/data.srvc.js', 'services/core/http.srvc.js', 'services/core/auth.srvc.js', 
+        'services/base/ui.srvc.js', 'services/base/base.srvc.js',
+        'services/site/site.ctrl.js', 'services/site/theme.srvc.js', 'services/site/user.srvc.js',
+        'services/app/**/*.js', 'components/**/*.js', 'sections/**/*.js'
     ];
 
     var appjsSrcDef2 = appjsSrcDef.map(function (path) {
-        return 'stage/js/app/' + path;
+        return 'stage/js/app/' + path.replace(/(\.js)$/,'.min.js');
     });
 
     var bowerPath = 'src/assets/bower_components/';
@@ -111,7 +115,8 @@ module.exports = function (grunt) {
                 options: {separator: '\n'},
                 files  : [{
                     src : ['stage/css/assets/compiled/**/*.css'],
-                    dest: 'stage/css/assets/concat.css'
+                    dest: 'stage/css/assets/concat.css',
+                    nonull: true
                 }]
             },
             vendorcss: {
@@ -121,7 +126,8 @@ module.exports = function (grunt) {
                         bowerPath + 'bootstrap/dist/css/bootstrap.min.css',
                         bowerPath + 'bootstrap/dist/css/bootstrap-theme.min.css'
                     ],
-                    dest: 'stage/css/vendor/concat.css'
+                    dest: 'stage/css/vendor/concat.css',
+                    nonull: true
                 }]
             },
             appjs    : {
@@ -132,7 +138,8 @@ module.exports = function (grunt) {
                 },
                 files  : [{
                     src : appjsSrcDef2,
-                    dest: 'dist/assets/js/app.min.js'
+                    dest: 'dist/assets/js/app.min.js',
+                    nonull: true
                 }]
             },
             vendorjs : {
@@ -144,7 +151,7 @@ module.exports = function (grunt) {
                 files  : [{
                     src : [
                         bowerPath + 'angular/angular.js', //.min
-                        bowerPath + 'angular-local-storage/dist/angular-local-storage.min.js',
+                        bowerPath + 'angular-local-storage/dist/angular-local-storage.js',
                         bowerPath + 'angular-ui-router/release/angular-ui-router.min.js',
                         bowerPath + 'angular-css/angular-css.min.js',
                         bowerPath + 'angular-bootstrap/ui-bootstrap-tpls.min.js',
@@ -154,7 +161,8 @@ module.exports = function (grunt) {
                         'stage/js/vendor/highcharts/dark-unica.min.js',
                         bowerPath + 'highcharts-ng/dist/highcharts-ng.min.js'
                     ],
-                    dest: 'dist/assets/js/vendor.min.js'
+                    dest: 'dist/assets/js/vendor.min.js',
+                    nonull: true
                 }]
             }
         },
@@ -332,7 +340,7 @@ module.exports = function (grunt) {
     grunt.registerTask('default', 'Displays helpful grunt information', grunt.help.display);
 
     // full build
-    grunt.registerTask('buildfull', 'Run all of the build scripts.', ['clean:dist', 'concurrent:all']);
+    grunt.registerTask('build', 'Run all of the build scripts.', ['clean:dist', 'concurrent:all']);
 
     // app build tasks
     grunt.registerTask('app-css-assets', 'Compile sass, concant, minimize and copy app asset css to dist', ['clean:stage_css_assets', 'sass:assets', 'concat:assetcss', 'postcss:assets', 'cssmin:assets']);

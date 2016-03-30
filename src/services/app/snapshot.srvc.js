@@ -1,16 +1,16 @@
-/* global mainApp */
+/* global baseApp */
 
 // SNAPSHOT SERVICE
-mainApp.factory('SnapshotsSrvc', [function () 
+baseApp.factory('SnapshotsSrvc', [function () 
 {
-    var dash = {},
+    var base = {},
         log  = function(m){console.log(m);},
         apiEndpoint = 'snapshots/get/all',
         readyState  = false;
 
     var extend = function (services) {
-        dash = services;
-        log  = dash.log;
+        base = services;
+        log  = base.log;
     };
 
     /**
@@ -27,18 +27,17 @@ mainApp.factory('SnapshotsSrvc', [function ()
                     'xyz': chart['xyz']
                 };
             }
-            dash.model.save('snapshots', data);
+            base.model.save('snapshots', data);
             readyState = true;
         };
 
-        createModel();
+        //createModel();
     };
 
     // return this factories services
     return {
         'service': {
-            'ready' : readyState,
-            'change': change
+            'ready' : readyState
         },
         'onready': {
             'api'   : apiEndpoint,

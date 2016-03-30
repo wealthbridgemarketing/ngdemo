@@ -1,17 +1,17 @@
-/* global mainApp */
+/* global baseApp */
 
 // LAYOUT SERVICE
-mainApp.factory('LayoutSrvc', [function () 
+baseApp.factory('LayoutSrvc', [function () 
 {
-    var dash = {},
+    var base = {},
         log  = function(m){console.log(m);},
         apiEndpoint = 'layouts/get/all',
         readyState  = false;
 
 
     var extend = function (services) {
-        dash = services;
-        log  = dash.log;
+        base = services;
+        log  = base.log;
     };
 
     /**
@@ -28,18 +28,17 @@ mainApp.factory('LayoutSrvc', [function ()
                     'xyz': chart['xyz']
                 };
             }
-            dash.model.save('layouts', data);
+            base.model.save('layouts', data);
             readyState = true;
         };
 
-        createModel();
+        //createModel();
     };
 
     // return this factories services
     return {
         'service': {
-            'ready' : readyState,
-            'change': change
+            'ready' : readyState
         },
         'onready': {
             'api'   : apiEndpoint,

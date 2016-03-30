@@ -1,23 +1,23 @@
 /* global siteApp */
 
 siteApp.factory(
-  'LoadExternal', ['$http', '$q', '$timeout', '$log', 'MainSrvc', function ($http, $q, $timeout, $log, MainSrvc) {
+  'LoadExternal', ['$http', '$q', '$timeout', '$log', 'BaseSrvc', function ($http, $q, $timeout, $log, BaseSrvc) {
     var load = function (ajaxURI, lsKey, expDate) {
       var deferred = $q.defer();
 
-      var dash = MainSrvc,
-          data = dash.ls.get('TemplatesCtrl:'+lsKey),
-          log = dash.log;
+      var base = BaseSrvc,
+          data = base.ls.get('TemplatesCtrl:'+lsKey),
+          log = base.log;
 
       //log('TemplatesCtrl:LoadExternal: "'+lsKey+'" value: '+data,'i');
       if (data!==undefined) deferred.resolve(data);
       else {
         $http.get(ajaxURI).then( function(response) {
           data = response.data;
-          dash.ls.set('TemplatesCtrl:'+lsKey, data, expDate);
+          base.ls.set('TemplatesCtrl:'+lsKey, data, expDate);
 
           $timeout(function(){
-            //log('TemplatesCtrl:LoadExternal: "'+lsKey+'" set in local storage: '+dash.ls.get('TemplatesCtrl:'+lsKey),'i');
+            //log('TemplatesCtrl:LoadExternal: "'+lsKey+'" set in local storage: '+base.ls.get('TemplatesCtrl:'+lsKey),'i');
             deferred.resolve(data);
           });
 
@@ -36,16 +36,16 @@ siteApp.config(['$sceDelegateProvider', function ($sceDelegateProvider)
 }]);
 
 siteApp.controller('TemplatesCtrl',
-['$state', '$scope', 'Breadcrumbs', 'MainSrvc', 'LoadExternal', 'appContent', 'appTemplates', '$uibModal', '$compile',
-function($state, $scope, Breadcrumbs, MainSrvc, LoadExternal, appContent, appTemplates, $uibModal, $compile) {
+['$state', '$scope', 'BaseSrvc', 'Breadcrumbs', 'LoadExternal', 'appContent', 'appTemplates', '$uibModal', '$compile',
+function($state, $scope, BaseSrvc, Breadcrumbs, LoadExternal, appContent, appTemplates, $uibModal, $compile) {
 
   Breadcrumbs.set([
     { text: 'AngularJS Dynamic Templates' }
   ]);
 
-  // alias the Dashboard Service
-  $scope.dash = MainSrvc;
-  var log = $scope.dash.log;
+  // alias the Base Service
+  $scope.base = BaseSrvc;
+  var log = $scope.base.log;
 
   /**
    * appContent & appTemplates are created in the state's resolve paramter.

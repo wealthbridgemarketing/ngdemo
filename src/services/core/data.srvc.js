@@ -1,26 +1,9 @@
 /* global coreApp */
 
-// APP CONFIGURATION
-coreApp.config(function (appConfig, localStorageServiceProvider) {
-    var base = appConfig.basePath,
-        host = window.location.hostname;
-    
-    // makes it possible to run x-debug on localhost
-    if (/^localhost:(\d{3,6})$/.test(host)) { base = host.replace(/^localhost/, '') + base; }
-    
-    /**
-     * dynamically add the base tag to the document head
-     * required by $locationProvider.html5Mode(true); set in app.routes.js for ui-router
-     */
-    angular.element(document.querySelector('head')).append('<base href="' + base + '">');
-
-    // configure the local storage service
-    localStorageServiceProvider.setStorageType(appConfig.lsType);
-    localStorageServiceProvider.setPrefix(appConfig.lsPrefix);
-});
-
-// DATA SERVICE
-coreApp.factory('DataSrvc', ['appConfig', 'localStorageService', function (appConfig,localStorageService) {
+/**
+ * Data Service
+ */
+coreApp.factory('DataSrvc', ['CFG', 'localStorageService', function (CFG,localStorageService) {
     /**
      * Local Storage Service
      * @link https://github.com/grevory/angular-local-storage
@@ -34,8 +17,8 @@ coreApp.factory('DataSrvc', ['appConfig', 'localStorageService', function (appCo
          * Set local storage var with optional expiration period
          *
          * @example
-         * MainSrvc.locStorage.set('myTemplate', tmplHtml);
-         * MainSrvc.locStorage.set('myUniqueKey', myVar, '1 day');
+         * BaseSrvc.locStorage.set('myTemplate', tmplHtml);
+         * BaseSrvc.locStorage.set('myUniqueKey', myVar, '1 day');
          *
          * @param {string} key
          * @param {(string|number|boolean|date|object)} val
@@ -114,7 +97,10 @@ coreApp.factory('DataSrvc', ['appConfig', 'localStorageService', function (appCo
         'clearAll': localStorageService.clearAll
     };
 
-    // This is where the apps data is all managed
+    /**
+     * Application Data Model
+     * @type {{}}
+     */
     var appData = {},
         clsData = {
             save  : function(key,val) { appData[key] = val;               },
@@ -126,7 +112,7 @@ coreApp.factory('DataSrvc', ['appConfig', 'localStorageService', function (appCo
     var service = {
         'AppReadyState': false,
         'locStorage'   : locStorage,
-        'ngPatterns'   : appConfig.ngPatterns,
+        'regxPatterns' : CFG.REGX_PATTERNS,
         'AppData'      : appData,
         'AppDataClass' : clsData
     };

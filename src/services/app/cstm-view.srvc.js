@@ -1,17 +1,17 @@
-/* global mainApp */
+/* global baseApp */
 
 // CUSTOM VIEW SERVICE
-mainApp.factory('CstmViewsSrvc', [function () 
+baseApp.factory('CstmViewsSrvc', [function () 
 {
-    var dash = {},
+    var base = {},
         log  = function(m){console.log(m);},
         apiEndpoint = 'cstmviews/get/all',
         readyState  = false;
 
 
     var extend = function (services) {
-        dash = services;
-        log  = dash.log;
+        base = services;
+        log  = base.log;
     };
 
     /**
@@ -28,18 +28,17 @@ mainApp.factory('CstmViewsSrvc', [function ()
                     'xyz': chart['xyz']
                 };
             }
-            dash.model.save('cstmviews', data);
+            base.model.save('cstmviews', data);
             readyState = true;
         };
 
-        createModel();
+        //createModel();
     };
 
     // return this factories services
     return {
         'service': {
-            'ready' : readyState,
-            'change': change
+            'ready' : readyState
         },
         'onready': {
             'api'   : apiEndpoint,

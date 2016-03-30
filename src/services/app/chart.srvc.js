@@ -1,17 +1,17 @@
-/* global mainApp */
+/* global baseApp */
 
 // CHARTS SERVICE
-mainApp.factory('ChartSrvc', [function ()
+baseApp.factory('ChartSrvc', [function ()
 {
-    var dash = {},
+    var base = {},
         log  = function(m){console.log(m);},
         apiEndpoint = 'chartdefs/get/all',
         readyState  = false;
 
 
     var extend = function (services) {
-        dash = services;
-        log  = dash.log;
+        base = services;
+        log  = base.log;
     };
 
     /**
@@ -28,18 +28,17 @@ mainApp.factory('ChartSrvc', [function ()
                     'xyz': chart['xyz']
                 };
             }
-            dash.model.save('charts', data);
+            base.model.save('charts', data);
             readyState = true;
         };
 
-        createModel();
+        //createModel();
     };
 
     // return this factories services
     return {
         'service': {
-            'ready' : readyState,
-            'change': change
+            'ready' : readyState
         },
         'onready': {
             'api'   : apiEndpoint,

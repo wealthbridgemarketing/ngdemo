@@ -10,11 +10,11 @@
  * @todo Integrate the PersistFactory using:
  *       see: http://www.revillweb.com/angularjs-by-example/4-sharing-data-with-angularjs-services/
  */
-coreApp.factory('httpSrvc', ['DataSrvc', '$http', '$q', function (DataSrvc, $http, $q)
+coreApp.factory('httpSrvc', ['DataSrvc','CFG', '$http', '$q', function (DataSrvc, CFG, $http, $q)
 {
     var config = {
         method: 'GET',
-        url   : 'http://localhost/inteleview/analytics/backend/api/',
+        url   : CFG.API_BASE_PATH,
         params: {}  // str || obj
     };
 

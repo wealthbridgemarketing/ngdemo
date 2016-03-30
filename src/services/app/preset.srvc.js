@@ -1,17 +1,17 @@
-/* global mainApp */
+/* global baseApp */
 
 // PRESET VIEW SERVICE
-mainApp.factory('PresetsSrvc', [function () 
+baseApp.factory('PresetsSrvc', [function () 
 {
-    var dash = {},
+    var base = {},
         log  = function(m){console.log(m);},
         apiEndpoint = 'presets/get/all',
         readyState  = false;
 
 
     var extend = function (services) {
-        dash = services;
-        log  = dash.log;
+        base = services;
+        log  = base.log;
     };
 
     /**
@@ -28,18 +28,17 @@ mainApp.factory('PresetsSrvc', [function ()
                     'xyz': chart['xyz']
                 };
             }
-            dash.model.save('presets', data);
+            base.model.save('presets', data);
             readyState = true;
         };
 
-        createModel();
+        //createModel();
     };
 
     // return this factories services
     return {
         'service': {
-            'ready' : readyState,
-            'change': change
+            'ready' : readyState
         },
         'onready': {
             'api'   : apiEndpoint,
