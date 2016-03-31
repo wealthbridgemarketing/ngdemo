@@ -1,20 +1,30 @@
 /**
  * Inteleview Analytics - sandbox application
  * 
- * The purpose of this application is to:
- * 1. Learn how to create a single-page application using AngularJS and Bootstrap.
- * 2. Create/test components and snippets that will be used in the real application.
- * 3. Aid in the process of mastering AngularJS and Bootstrap.
- * 4. Break my dependency on jQuery by learning how to program without it.
- * 
- * Grunt is being used to build this application.
+ * @todo Update Breadcrumbs class to become a theme class
+ * @suppress Fix the Template demo
+ * @suppress Fix the 404 demo
+ * @todo Finish the AuthSrvc
+ * @todo Finish the HttpSrvc
+ * @todo Can a Node server be spun up automatically?
+ * @todo How can the DataSrvc automatically use local storage?
+ * @todo Update theme to be traditional Bootstrap App
+ * @todo Add generic modal to uiSrvc
+ * @todo Add generic Alert modal to uiSrvc
+ * @todo Create page to demo uiSrvc services
+ * @todo Complete the Contact Page
+ * @todo Complete the Profile Page
+ * @todo Add a Login Form
+ * @todo Demo Angular Animation
+ * @todo Add new Sass Mixins
+ * @todo Add Highcharts Demo
+ * @todo Add Global DevMode to uiSrvc
  */
 var coreApp = angular.module('app.core', ['LocalStorageModule']);
 var baseApp = angular.module('app.main', ['app.core']);
 var siteApp = angular.module('app.site', ['ui.router',      // AngularUI Router - Replacement for ngRoute (https://github.com/angular-ui/ui-router)
                                           'door3.css',      // AngularCSS: Dynamically inject stylesheets as needed (https://github.com/castillo-io/angular-css)
                                           'ui.bootstrap',   // UI Bootstrap: Bootstrap components written in AngularJS (http://angular-ui.github.io/bootstrap)
-                                          'app.core',
                                           'app.main']);
 // CORE APP CONSTANTS
 coreApp.constant('CFG', {

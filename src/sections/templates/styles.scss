@@ -4,7 +4,9 @@ html {
   border: 0;
 }
 
-header .row2 { margin-bottom: 0; }
+header {
+  .row2 { margin-bottom: 0; }
+}
 
 .glyphicon-check { color: #008000; }
 

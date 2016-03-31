@@ -104,481 +104,723 @@
  *          after the api returns, use the append method to update the panel as necessary.
  */
 siteApp.factory('uiSrvc',
-['$rootScope', '$log', '$filter', 'uiConfirm',
-function ($rootScope, $log, $filter, uiConfirm) {
+    ['$rootScope', '$log', '$filter', 'uiConfirm',
+        function($rootScope, $log, $filter, uiConfirm) {
 
-    // get url parameter: var url_user_id = ui.qs['user_id']
-    var qs = (function (a) {
-        if (a == "") return {};
-        var b = {};
-        for (var i = 0; i < a.length; ++i) {
-            var p = a[i].split('=');
-            if (p.length != 2) continue;
-            b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
-        }
-        return b;
-    })(window.location.search.substr(1).split('&'));
+            // get url parameter: var url_user_id = ui.qs['user_id']
+            var qs = (function(a) {
+                if (a == "") return {};
+                var b = {};
+                for (var i = 0; i < a.length; ++i) {
+                    var p = a[i].split('=');
+                    if (p.length != 2) continue;
+                    b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
+                }
+                return b;
+            })(window.location.search.substr(1).split('&'));
 
-    // Console Logging - enhances the angularjs $log functionality
-    var log = function (msg, type, style) {
+            // Console Logging - enhances the angularjs $log functionality
+            var log = function(msg, type, style) {
 
-        // allows multiple logs to be passed in using an array
-        if (Array.isArray(msg)) {
-            for (var i = 0, l = msg.length; i < l; i++) {
-                if (Array.isArray(msg[i])) {
-                    switch (msg[i].length) {
-                        case 3: log(msg[i][0], msg[i][1], msg[i][2]); break;
-                        case 2: log(msg[i][0], msg[i][1]);            break;
-                        case 1: log(msg[i][0]);                       break; // shouldn't be called this way
-                      //default: log([['log: invalid msg array. expected: [msg, (opt)type, (opt)style]','e'], msg[i]]);
+                // allows multiple logs to be passed in using an array
+                if (Array.isArray(msg)) {
+                    for (var i = 0, l = msg.length; i < l; i++) {
+                        if (Array.isArray(msg[i])) {
+                            switch (msg[i].length) {
+                                case 3:
+                                    log(msg[i][0], msg[i][1], msg[i][2]);
+                                    break;
+                                case 2:
+                                    log(msg[i][0], msg[i][1]);
+                                    break;
+                                case 1:
+                                    log(msg[i][0]);
+                                    break; // shouldn't be called this way
+                                //default: log([['log: invalid msg array. expected: [msg, (opt)type, (opt)style]','e'], msg[i]]);
+                            }
+                        }
+                        else log(msg[i]);
+                    }
+                    return true;
+                }
+
+                // replace [ts] in msg with a timestamp
+                if (typeof msg === 'string' && msg.indexOf('[ts]') !== -1) {
+                    msg = msg.replace(/(\[ts])(\s)?/, $filter('date')(new Date(), 'HH:mm:ss:sss') + ' - ');
+                }
+
+                // type of log to output
+                var method;
+                switch (type) {
+                    case 'd':
+                        method = 'debug';
+                        break;
+                    case 'e':
+                        method = 'error';
+                        break;
+                    case 'i':
+                        method = 'info';
+                        break;
+                    case 'w':
+                        method = 'warn';
+                        break;
+                    default :
+                        method = 'log';
+                }
+
+                // if type resulted in default method, it's likely related to color/style
+                if (style !== undefined) {
+                    var css, baseCss = 'font-weight: bold; padding: 3px;', baseClr = 'color: #fff;';
+                    switch (style) {
+                        case 'black'    :
+                            css = baseCss + ' background-color: #111111; ' + baseClr;
+                            break;
+                        case 'blue'     :
+                            css = baseCss + ' background-color: #0000ff; ' + baseClr;
+                            break;
+                        case 'green'    :
+                            css = baseCss + ' background-color: #008000; ' + baseClr;
+                            break;
+                        case 'grey'     :
+                            css = baseCss + ' background-color: #808080; ' + baseClr;
+                            break;
+                        case 'maroon'   :
+                            css = baseCss + ' background-color: #800000; ' + baseClr;
+                            break;
+                        case 'pink'     :
+                            css = baseCss + ' background-color: #ffc0cb; ' + baseClr;
+                            break;
+                        case 'purple'   :
+                            css = baseCss + ' background-color: #800080; ' + baseClr;
+                            break;
+                        case 'orange'   :
+                            css = baseCss + ' background-color: #ffa500; ' + baseClr;
+                            break;
+                        case 'red'      :
+                            css = baseCss + ' background-color: #ff0000; ' + baseClr;
+                            break;
+                        case 'silver'   :
+                            css = baseCss + ' background-color: #e5e5e5; color: #333';
+                            break;
+                        case 'broadcast':
+                            css = 'background-color: #eedc82; color: #004600; padding:3px;';
+                            break;
+                        default:
+                            var len = style.length;
+                            if (len === 6 || len === 7) {
+                                var bgclr = len === 6 ? '#' + style : style;
+                                css       = baseCss + ' background-color: ' + bgclr + '; ' + baseClr;
+                            }
+                            else if (len > 7) css = style.replace('{baseCss}', baseCss).replace('{baseClr}', baseClr);
+                            break;
                     }
                 }
-                else log(msg[i]);
-            }
-            return true;
-        }
 
-        // replace [ts] in msg with a timestamp
-        if (typeof msg === 'string' && msg.indexOf('[ts]') !== -1) {
-            msg = msg.replace(/(\[ts])(\s)?/, $filter('date')(new Date(), 'HH:mm:ss:sss') + ' - ');
-        }
+                if (css === undefined) $log[method](msg);
+                else {
+                    var minWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
+                        msgLen   = msg.length,
+                        padding  = '';
+                    for (; msgLen < minWidth; msgLen++) padding += ' ';
+                    msg = '%c' + msg + padding;
 
-        // type of log to output
-        var method;
-        switch (type) {
-            case 'd': method = 'debug'; break;
-            case 'e': method = 'error'; break;
-            case 'i': method = 'info';  break;
-            case 'w': method = 'warn';  break;
-            default : method = 'log';
-        }
-
-        // if type resulted in default method, it's likely related to color/style
-        if (style !== undefined) {
-            var css, baseCss = 'font-weight: bold; padding: 3px;', baseClr = 'color: #fff;';
-            switch (style) {
-                case 'black'    : css = baseCss + ' background-color: #111111; ' + baseClr;        break;
-                case 'blue'     : css = baseCss + ' background-color: #0000ff; ' + baseClr;        break;
-                case 'green'    : css = baseCss + ' background-color: #008000; ' + baseClr;        break;
-                case 'grey'     : css = baseCss + ' background-color: #808080; ' + baseClr;        break;
-                case 'maroon'   : css = baseCss + ' background-color: #800000; ' + baseClr;        break;
-                case 'pink'     : css = baseCss + ' background-color: #ffc0cb; ' + baseClr;        break;
-                case 'purple'   : css = baseCss + ' background-color: #800080; ' + baseClr;        break;
-                case 'orange'   : css = baseCss + ' background-color: #ffa500; ' + baseClr;        break;
-                case 'red'      : css = baseCss + ' background-color: #ff0000; ' + baseClr;        break;
-                case 'silver'   : css = baseCss + ' background-color: #e5e5e5; color: #333';       break;
-                case 'broadcast': css = 'background-color: #eedc82; color: #004600; padding:3px;'; break;
-                default:
-                    var len = style.length;
-                    if (len === 6 || len === 7) {
-                        var bgclr = len === 6 ? '#' + style : style;
-                        css = baseCss + ' background-color: ' + bgclr + '; ' + baseClr;
-                    }
-                    else if (len > 7) css = style.replace('{baseCss}',baseCss).replace('{baseClr}',baseClr);
-                break;
-            }
-        }
-
-        if (css === undefined) $log[method](msg);
-        else {
-            var minWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
-                msgLen   = msg.length,
-                padding  = '';
-            for (; msgLen < minWidth; msgLen++) padding += ' ';
-            msg = '%c' + msg + padding;
-
-            $log[method](msg, css);
-        }
-    };
-
-    // Confirm Dialog - a generic confirm dialog using the ui-bootstrap modal
-    var confirm = function (options, defaults) {
-        if (defaults === undefined) defaults = {};
-        uiConfirm.showModal(defaults, options).then(
-          function () {
-              options.action(true);
-          },
-          function () {
-              if (!!options.sendCxl === true) options.action(false);
-          }
-        );
-    };
-
-    // Status UI library - promotes small-chunk api calls and enables verbose client/server communication.
-    var status = {
-        $scope       : undefined,
-        init         : function ($scope, config) {
-            var BASECFG = {
-                dbug : false,
-                ani  : undefined,
-                opts : {},
-                stage: false,
-                log  : false,
-                data : {}
+                    $log[method](msg, css);
+                }
             };
-            var STAGE   = {
-                HTML  : {
-                    hidden  : true,
-                    label   : '',
-                    template: ''
+
+            // Confirm Dialog - a generic confirm dialog using the ui-bootstrap modal
+            var confirm = function(options, defaults) {
+                if (defaults === undefined) defaults = {};
+                uiConfirm.showModal(defaults, options).then(
+                    function() {
+                        options.action(true);
+                    },
+                    function() {
+                        if (!!options.sendCxl === true) options.action(false);
+                    }
+                );
+            };
+
+            // Alert Dialog - a generic alert dialog using the ui-bootstrap modal
+            var alert = function(options, defaults) {
+                if (defaults === undefined) defaults = {};
+                uiAlert.showModal(defaults, options).then(
+                    function() {
+                        options.action(true);
+                    },
+                    function() {
+                        if (!!options.sendCxl === true) options.action(false);
+                    }
+                );
+            };
+
+            // Status UI library - promotes small-chunk api calls and enables verbose client/server communication.
+            var status = {
+                $scope       : undefined,
+                init         : function($scope, config) {
+                    var BASECFG = {
+                        dbug : false,
+                        ani  : undefined,
+                        opts : {},
+                        stage: false,
+                        log  : false,
+                        data : {}
+                    };
+                    var STAGE   = {
+                        HTML  : {
+                            hidden  : true,
+                            label   : '',
+                            template: ''
+                        },
+                        GLYPHS: {
+                            1: {glyph: 'glyphicon-hourglass spin'},
+                            2: {glyph: 'glyphicon-minus-sign'},
+                            3: {glyph: 'glyphicon-minus-sign'},
+                            4: {glyph: 'glyphicon-minus-sign'},
+                            5: {glyph: 'glyphicon-minus-sign'},
+                            6: {glyph: 'glyphicon-minus-sign'}
+                        }
+                    };
+                    var LOG     = {
+                        $modal: undefined,
+                        ctrl  : undefined,
+                        open  : function(opts) {
+                            status.openLog(opts);
+                        }
+                    };
+
+                    // process the config if supplied
+                    if (!!config && typeof config === 'object') {
+                        // setup the stage if it's being used
+                        if (!!config.stage) {
+                            config.stage = STAGE.GLYPHS;
+                            if (!!config.html) config.html = angular.merge(STAGE.HTML, config.html);
+                            else config.html = STAGE.HTML;
+                        }
+
+                        // check the log viewer vars if set
+                        if (typeof config.log !== 'undefined') {
+                            /**
+                             * This is a quick and very dirty way of implementing a reusable modal log viewer.  It was built while
+                             * working on productController.js.  In that script the $modal dependency is inject into the
+                             * searchProducts controller and there is an existing, generic modal controller: ModalInstanceCtrl.
+                             */
+                            var logerr = false;
+                            if (typeof config.log.$modal !== 'object' || config.log.$modal === null) logerr = 'The log.$modal param is invalid';
+                            else if (typeof config.log.ctrl !== 'function') logerr = 'The log.ctrl param is invalid';
+
+                            if (logerr !== false) {
+                                config.log = null;
+                                log(logerr, 'e');
+                                alert(logerr);
+                            }
+                            else config.log = angular.merge(LOG, config.log);
+                        }
+
+                        // merge the custom config into the BASECFG
+                        $scope.statui = angular.merge(BASECFG, config);
+                    }
+                    else $scope.statui = BASECFG;
+
+                    status.$scope = $scope;
                 },
-                GLYPHS: {
-                    1: {glyph: 'glyphicon-hourglass spin'},
-                    2: {glyph: 'glyphicon-minus-sign'},
-                    3: {glyph: 'glyphicon-minus-sign'},
-                    4: {glyph: 'glyphicon-minus-sign'},
-                    5: {glyph: 'glyphicon-minus-sign'},
-                    6: {glyph: 'glyphicon-minus-sign'}
-                }
-            };
-            var LOG     = {
-                $modal: undefined,
-                ctrl  : undefined,
-                open  : function (opts) { status.openLog(opts); }
-            };
+                validateOpts : function(options) {
+                    // validate that we have received options
+                    if (!!options === false) return status.handleError('Empty options parameter.');
 
-            // process the config if supplied
-            if (!!config && typeof config === 'object') {
-                // setup the stage if it's being used
-                if (!!config.stage) {
-                    config.stage = STAGE.GLYPHS;
-                    if (!!config.html) config.html = angular.merge(STAGE.HTML, config.html);
-                    else config.html = STAGE.HTML;
-                }
+                    // validate the options
+                    var errs = [], k = Object.keys(options), l = k.length, i = 0;
+                    for (; i < l; i++) {
+                        var v = options[k[i]];
+                        if (v === '') errs.push("'" + k[i] + "'");
+                    }
+                    if (errs.length > 0) return status.handleError('Invalid Option' + (errs.length > 1 ? 's' : '') + ': ' + errs.join(' & '));
 
-                // check the log viewer vars if set
-                if (typeof config.log !== 'undefined') {
-                    /**
-                     * This is a quick and very dirty way of implementing a reusable modal log viewer.  It was built while
-                     * working on productController.js.  In that script the $modal dependency is inject into the
-                     * searchProducts controller and there is an existing, generic modal controller: ModalInstanceCtrl.
-                     */
-                    var logerr = false;
-                    if (typeof config.log.$modal !== 'object' || config.log.$modal === null) logerr = 'The log.$modal param is invalid';
-                    else if (typeof config.log.ctrl !== 'function') logerr = 'The log.ctrl param is invalid';
+                    return true;
+                },
+                updateStatus : function(type, message, stage) {
+                    var prefix = '';
+                    switch (type) {
+                        case 'danger' :
+                            prefix = 'ERROR: ';
+                            break;
+                        case 'success':
+                            prefix = 'SUCCESS: ';
+                            break;
+                        case 'warning':
+                            prefix = 'WARNING: ';
+                            break;
+                    }
 
-                    if (logerr !== false) {
-                        config.log = null;
+                    status.$scope.ajaxResultMessage = prefix + message;
+                    status.$scope.ajaxResultType    = 'text-' + type;
+
+                    if (type === 'info') {
+                        if (status.$scope.statui.stage !== false && stage !== undefined)
+                            status.$scope.statui.stage[stage].glyph = 'glyphicon-hourglass spin';
+
+                        status.aniStart();
+                    }
+                },
+                handleError  : function(errmsg, meta) {
+                    var message, msgtype = typeof errmsg,
+                        response, callback;
+
+                    if (msgtype === undefined || msgtype === 'number') {
+                        if (msgtype === 'number') {
+                            status.aniStop();
+                            if (status.$scope.statui.stage !== false)
+                                status.$scope.statui.stage[errmsg].glyph = 'glyphicon-remove-sign';
+                            if (typeof meta === 'function') callback = meta;
+                        }
+                        message = 'An unknown server error occured.';
+                    }
+                    else if (errmsg === null) {
+                        response = meta;
+                        message  = 'Invalid response from server.';
+                        if (status.$scope.statui.dbug) log([['invalid response', 'e', 'red'], response]);
+                    }
+                    else message = errmsg;
+
+                    status.updateStatus('danger', message);
+                    return typeof callback === 'function' ? status.error(null, callback) : false;
+                },
+                logResponse  : function(response, stage) {
+                    if (!status.$scope.statui.dbug) return;
+                    var color = response.result.type === 'success' ? 'green' : 'red',
+                        label = stage === undefined ? 'response' : 'stage ' + stage + ' response';
+                    log([[label, 'i', color], response]);
+                },
+                checkResponse: function(response, stage) {
+                    status.aniStop();
+
+                    var retval = false;
+
+                    if (!!response.result === false) {
+                        status.handleError(null, response);
+                    }
+                    else if (response.result.type === 'error') {
+                        if (typeof response.result.data === 'string')
+                            status.handleError(response.result.data);
+                        else if (typeof response.result.data.errmsg === 'string')
+                            status.handleError(response.result.data.errmsg);
+                        else
+                            status.handleError(null, response);
+                    }
+                    else {
+                        retval = true;
+                        status.logResponse(response, stage);
+                    }
+
+                    if (status.$scope.statui.stage !== false && stage !== undefined)
+                        status.$scope.statui.stage[stage].glyph = retval ? 'glyphicon-ok-sign' : 'glyphicon-remove-sign';
+
+                    return retval;
+                },
+                aniStart     : function($scope) {
+                    // this makes it possible to use the animation without init()
+                    if ($scope !== undefined) {
+                        if (typeof $scope.statui === 'undefined') $scope.statui = {ani: undefined};
+                        status.$scope = $scope;
+                    }
+                    var parts, dots          = '.';
+                    status.$scope.statui.ani = setInterval(function() {
+                        parts = /^(.+?)(\.{1,3})$/.exec(status.$scope.ajaxResultMessage);
+                        if (parts[2].length === 3) dots = '.'; else dots = dots + '.';
+                        status.$scope.ajaxResultMessage = parts[1] + dots;
+                        status.$scope.$apply();
+                    }, 1000);
+                },
+                aniStop      : function() {
+                    if (typeofObject(status, '$scope.statui.ani') === 'number') {
+                        clearInterval(status.$scope.statui.ani);
+                        status.$scope.statui.ani = undefined;
+                        // self destruct the $scope stuff if it was created by aniStart
+                        if (Object.keys(status.$scope.statui).length === 1) {
+                            delete status.$scope.statui;
+                        }
+                    }
+                },
+                openLog      : function(opts) {
+                    if (!!status.$scope.statui.log === false) {
+                        var logerr = 'undefined error in log viewer';
+                        if (status.$scope.statui.log === false) logerr = 'The log viewer must be configured during initialization.';
+                        if (status.$scope.statui.log === null) logerr = 'The log viewer has been disabled due to an invalid configuration.';
                         log(logerr, 'e');
                         alert(logerr);
+                        return;
                     }
-                    else config.log = angular.merge(LOG, config.log);
+
+                    // variable definitions
+                    var statui = {}, data, l, i,
+                        label  = typeofObject(status, '$scope.statui.html.label') === 'string' ? copyObject(status.$scope.statui.html.label).trim() : 'RESULTS';
+
+                    // create output array: special processing for the 'only' option
+                    if (typeofObject(opts, 'only') === 'object') {
+                        l = opts['only'].length;
+                        for (i = 0; i < l; i++) {
+                            if (typeofObject(status, '$scope.statui.' + opts['only'][i]) === 'undefined')
+                                data = {'undefined': opts['only'][i]}
+                            else
+                                data = copyObject(eval('status.$scope.statui.' + opts['only'][i]));
+
+                            statui = angular.merge(statui, data);
+                        }
+                    }
+                    // create output array: default method
+                    else {
+                        statui = copyObject(status.$scope.statui);
+
+                        // remove everything added by this class except opts and data
+                        delete statui.dbug;
+                        delete statui.ani;
+                        delete statui.stage;
+                        delete statui.html;
+                        delete statui.log;
+                    }
+
+                    // remove everything in the exclusion list
+                    if (typeofObject(opts, 'excl') === 'object') {
+                        l = opts['excl'].length;
+                        for (i = 0; i < l; i++) eval('delete statui.' + opts['excl'][i]);
+                    }
+
+                    // create a parent object for statui
+                    if (typeofObject(opts, 'name') === 'string' && opts['name'].trim().length > 0) {
+                        var tmp              = copyObject(statui);
+                        statui               = {};
+                        statui[opts['name']] = tmp;
+
+                        if (label === '' || label === 'RESULTS') label = opts['name'].replace(/_/, ' ');
+                        else label += ' "' + opts['name'].replace(/_/, ' ') + '"';
+                    }
+
+                    // create a pretty print json string
+                    statui = angular.toJson(statui, true);
+
+                    // open a modal to show the json string
+                    status.$scope.statui.log.$modal.open({
+                        template   : '<div class="modal-header text-uppercase" ng-controller="searchProducts"><h3>{{vars.label}} LOG</h3></div>' +
+                        '<div class="modal-body"><div class="col-md-12"><pre>{{vars.data}}</pre></div></div>' +
+                        '<div class="modal-footer"><button type="submit" class="btn btn-default" ng-click="cancel()">Close</button></div>',
+                        controller : status.$scope.statui.log.ctrl,
+                        size       : 'lg',
+                        windowClass: 'statui-log',
+                        resolve    : {
+                            vars: function() {
+                                return {'data': statui, 'label': label}
+                            }
+                        }
+                    });
+                },
+                error        : function(data, cb) {
+                    if (!!data && status.$scope.statui.dbug) log([['data @ error', 'w'], status.$scope.statui.data]);
+                    if (typeof cb === 'function') cb();
+                    return false;
                 }
+            };
 
-                // merge the custom config into the BASECFG
-                $scope.statui = angular.merge(BASECFG, config);
-            }
-            else $scope.statui = BASECFG;
-
-            status.$scope = $scope;
-        },
-        validateOpts : function (options) {
-            // validate that we have received options
-            if (!!options === false) return status.handleError('Empty options parameter.');
-
-            // validate the options
-            var errs = [], k = Object.keys(options), l = k.length, i = 0;
-            for (; i < l; i++) {
-                var v = options[k[i]];
-                if (v === '') errs.push("'" + k[i] + "'");
-            }
-            if (errs.length > 0) return status.handleError('Invalid Option' + (errs.length > 1 ? 's' : '') + ': ' + errs.join(' & '));
-
-            return true;
-        },
-        updateStatus : function (type, message, stage) {
-            var prefix = '';
-            switch (type) {
-                case 'danger' : prefix = 'ERROR: ';   break;
-                case 'success': prefix = 'SUCCESS: '; break;
-                case 'warning': prefix = 'WARNING: '; break;
-            }
-
-            status.$scope.ajaxResultMessage = prefix + message;
-            status.$scope.ajaxResultType    = 'text-' + type;
-
-            if (type === 'info') {
-                if (status.$scope.statui.stage !== false && stage !== undefined)
-                    status.$scope.statui.stage[stage].glyph = 'glyphicon-hourglass spin';
-
-                status.aniStart();
-            }
-        },
-        handleError  : function (errmsg, meta) {
-            var message, msgtype = typeof errmsg,
-                response, callback;
-
-            if (msgtype === undefined || msgtype === 'number') {
-                if (msgtype === 'number') {
-                    status.aniStop();
-                    if (status.$scope.statui.stage !== false)
-                        status.$scope.statui.stage[errmsg].glyph = 'glyphicon-remove-sign';
-                    if (typeof meta === 'function') callback = meta;
-                }
-                message = 'An unknown server error occured.';
-            }
-            else if (errmsg === null) {
-                response = meta;
-                message  = 'Invalid response from server.';
-                if (status.$scope.statui.dbug) log([['invalid response', 'e', 'red'], response]);
-            }
-            else message = errmsg;
-
-            status.updateStatus('danger', message);
-            return typeof callback === 'function' ? status.error(null, callback) : false;
-        },
-        logResponse  : function (response, stage) {
-            if (!status.$scope.statui.dbug) return;
-            var color = response.result.type === 'success' ? 'green' : 'red',
-                label = stage === undefined ? 'response' : 'stage ' + stage + ' response';
-            log([[label, 'i', color], response]);
-        },
-        checkResponse: function (response, stage) {
-            status.aniStop();
-
-            var retval = false;
-
-            if (!!response.result === false) {
-                status.handleError(null, response);
-            }
-            else if (response.result.type === 'error') {
-                if (typeof response.result.data === 'string')
-                    status.handleError(response.result.data);
-                else if (typeof response.result.data.errmsg === 'string')
-                    status.handleError(response.result.data.errmsg);
-                else
-                    status.handleError(null, response);
-            }
-            else {
-                retval = true;
-                status.logResponse(response, stage);
-            }
-
-            if (status.$scope.statui.stage !== false && stage !== undefined)
-                status.$scope.statui.stage[stage].glyph = retval ? 'glyphicon-ok-sign' : 'glyphicon-remove-sign';
-
-            return retval;
-        },
-        aniStart     : function ($scope) {
-            // this makes it possible to use the animation without init()
-            if ($scope !== undefined) {
-                if (typeof $scope.statui === 'undefined') $scope.statui = {ani: undefined};
-                status.$scope = $scope;
-            }
-            var parts, dots = '.';
-            status.$scope.statui.ani = setInterval(function () {
-                parts = /^(.+?)(\.{1,3})$/.exec(status.$scope.ajaxResultMessage);
-                if (parts[2].length === 3) dots = '.'; else dots = dots + '.';
-                status.$scope.ajaxResultMessage = parts[1] + dots;
-                status.$scope.$apply();
-            }, 1000);
-        },
-        aniStop      : function () {
-            if (typeofObject(status, '$scope.statui.ani') === 'number') {
-                clearInterval(status.$scope.statui.ani);
-                status.$scope.statui.ani = undefined;
-                // self destruct the $scope stuff if it was created by aniStart
-                if (Object.keys(status.$scope.statui).length === 1) {
-                    delete status.$scope.statui;
-                }
-            }
-        },
-        openLog      : function (opts) {
-            if (!!status.$scope.statui.log === false) {
-                var logerr = 'undefined error in log viewer';
-                if (status.$scope.statui.log === false) logerr = 'The log viewer must be configured during initialization.';
-                if (status.$scope.statui.log === null) logerr = 'The log viewer has been disabled due to an invalid configuration.';
-                log(logerr, 'e');
-                alert(logerr);
-                return;
-            }
-
-            // variable definitions
-            var statui = {}, data, l, i,
-                label  = typeofObject(status, '$scope.statui.html.label') === 'string' ? copyObject(status.$scope.statui.html.label).trim() : 'RESULTS';
-
-            // create output array: special processing for the 'only' option
-            if (typeofObject(opts, 'only') === 'object') {
-                l = opts['only'].length;
-                for (i = 0; i < l; i++) {
-                    if (typeofObject(status, '$scope.statui.' + opts['only'][i]) === 'undefined')
-                        data = {'undefined': opts['only'][i]}
-                    else
-                        data = copyObject(eval('status.$scope.statui.' + opts['only'][i]));
-
-                    statui = angular.merge(statui, data);
-                }
-            }
-            // create output array: default method
-            else {
-                statui = copyObject(status.$scope.statui);
-
-                // remove everything added by this class except opts and data
-                delete statui.dbug;
-                delete statui.ani;
-                delete statui.stage;
-                delete statui.html;
-                delete statui.log;
-            }
-
-            // remove everything in the exclusion list
-            if (typeofObject(opts, 'excl') === 'object') {
-                l = opts['excl'].length;
-                for (i = 0; i < l; i++) eval('delete statui.' + opts['excl'][i]);
-            }
-
-            // create a parent object for statui
-            if (typeofObject(opts, 'name') === 'string' && opts['name'].trim().length > 0) {
-                var tmp              = copyObject(statui);
-                statui               = {};
-                statui[opts['name']] = tmp;
-
-                if (label === '' || label === 'RESULTS') label = opts['name'].replace(/_/, ' ');
-                else label += ' "' + opts['name'].replace(/_/, ' ') + '"';
-            }
-
-            // create a pretty print json string
-            statui = angular.toJson(statui, true);
-
-            // open a modal to show the json string
-            status.$scope.statui.log.$modal.open({
-                template   : '<div class="modal-header text-uppercase" ng-controller="searchProducts"><h3>{{vars.label}} LOG</h3></div>' +
-                '<div class="modal-body"><div class="col-md-12"><pre>{{vars.data}}</pre></div></div>' +
-                '<div class="modal-footer"><button type="submit" class="btn btn-default" ng-click="cancel()">Close</button></div>',
-                controller : status.$scope.statui.log.ctrl,
-                size       : 'lg',
-                windowClass: 'statui-log',
-                resolve    : {
-                    vars: function () {
-                        return {'data': statui, 'label': label}
+            // a generic panels div that's easy to use
+            var panels = {
+                data  : {base: {show: false, type: '', text: ''}},
+                types : {
+                    success: 'alert-success',
+                    info   : 'alert-info',
+                    warning: 'alert-warning',
+                    danger : 'alert-danger'
+                },
+                // directive functions
+                init  : function(id) {
+                    this.data[id] = this.data.base;
+                },
+                show  : function(id) {
+                    return !!this.data[id].show;
+                },
+                type  : function(id) {
+                    return !!this.data[id].type ? this.data[id].type : '';
+                },
+                text  : function(id) {
+                    return !!this.data[id].text ? this.data[id].text : '';
+                },
+                // programmable functions
+                reset : function() {
+                    var k = Object.keys(this.data),
+                        l = k.length,
+                        i = 0;
+                    for (; i < l; i++) {
+                        if (k[i] === 'base') continue;
+                        this.init(k[i]);
+                    }
+                },
+                close : function(id) {
+                    this.init(id);
+                },
+                open  : function(id, type, text) {
+                    if (type === undefined || typeof this.types[type] === 'undefined') type = 'success';
+                    this.data[id] = {
+                        show: true,
+                        type: this.types[type],
+                        text: text
+                    }
+                },
+                append: function(id, type, text) { // type is optional
+                    if (!!this.data[id].show === false) this.open(id, type, text);
+                    else {
+                        if (type !== undefined && typeof this.types[type] !== 'undefined') this.data[id].type = this.types[type];
+                        this.data[id].text = this.data[id].text + '<br><br>' + text;
                     }
                 }
-            });
-        },
-        error        : function (data, cb) {
-            if (!!data && status.$scope.statui.dbug) log([['data @ error', 'w'], status.$scope.statui.data]);
-            if (typeof cb === 'function') cb();
-            return false;
-        }
-    };
+            };
 
-    // a generic panels div that's easy to use
-    var panels = {
-        data  : { base: {show: false, type: '', text: ''} },
-        types : {
-            success: 'alert-success',
-            info   : 'alert-info',
-            warning: 'alert-warning',
-            danger : 'alert-danger'
-        },
-        // directive functions
-        init  : function (id) { this.data[id] = this.data.base; },
-        show  : function (id) { return !!this.data[id].show; },
-        type  : function (id) { return !!this.data[id].type ? this.data[id].type : ''; },
-        text  : function (id) { return !!this.data[id].text ? this.data[id].text : ''; },
-        // programmable functions
-        reset : function () {
-            var k = Object.keys(this.data),
-                l = k.length,
-                i = 0;
-            for (; i < l; i++) {
-                if (k[i] === 'base') continue;
-                this.init(k[i]);
-            }
-        },
-        close : function (id) { this.init(id); },
-        open  : function (id, type, text) {
-            if (type === undefined || typeof this.types[type] === 'undefined') type = 'success';
-            this.data[id] = {
-                show: true,
-                type: this.types[type],
-                text: text
-            }
-        },
-        append: function (id, type, text) { // type is optional
-            if (!!this.data[id].show === false) this.open(id, type, text);
-            else {
-                if (type !== undefined && typeof this.types[type] !== 'undefined') this.data[id].type = this.types[type];
-                this.data[id].text = this.data[id].text + '<br><br>' + text;
-            }
-        }
-    };
+            // a simple object with the various functions
+            var services = {
+                qs     : qs,
+                log    : log,
+                confirm: confirm,
+                status : status,
+                panel  : panels
+            };
 
-    // a simple object with the various functions
-    var services = {
-        qs     : qs,
-        log    : log,
-        confirm: confirm,
-        status : status,
-        panel  : panels
-    };
-
-    return services;
-}]);
+            return services;
+        }]);
 
 /**
  * Provides the uiSrvc.confirm dialog service.
  */
 siteApp.service('uiConfirm',
-  ['$uibModal', function ($uibModal) {
+    ['$uibModal', function($uibModal) {
 
-      var modalOptions = {
-          btnOk : 'OK',
-          btnCxl: 'Cancel',
-          title : 'Confirmation Required',
-          text  : 'Please confirm that you wish to proceed by clicking OK.'
-      };
+        var modalOptions = {
+            btnOk : 'OK',
+            btnCxl: 'Cancel',
+            title : 'Confirmation Required',
+            text  : 'Please confirm that you wish to proceed by clicking OK.'
+        };
 
-      var modalDefaults = {
-          animation  : true,
-          backdrop   : 'static',
-          keyboard   : true,
-          templateUrl: 'components/templates/uiConfirmModal.html'
-      };
+        var modalDefaults = {
+            animation  : true,
+            backdrop   : 'static',
+            keyboard   : true,
+            templateUrl: 'components/templates/uiConfirmModal.html'
+        };
 
-      this.showModal = function (customModalDefaults, customModalOptions) {
-          if (!customModalDefaults) customModalDefaults = {};
-          return this.show(customModalDefaults, customModalOptions);
-      };
+        this.showModal = function(customModalDefaults, customModalOptions) {
+            if (!customModalDefaults) customModalDefaults = {};
+            return this.show(customModalDefaults, customModalOptions);
+        };
 
-      this.show = function (customModalDefaults, customModalOptions) {
-          //Create temp objects to work with since we're in a singleton service
-          var tempModalDefaults = {};
-          var tempModalOptions  = {};
+        this.show = function(customModalDefaults, customModalOptions) {
+            //Create temp objects to work with since we're in a singleton service
+            var tempModalDefaults = {};
+            var tempModalOptions  = {};
 
-          //Map angular-ui modal custom defaults to modal defaults defined in service
-          angular.extend(tempModalDefaults, modalDefaults, customModalDefaults);
+            //Map angular-ui modal custom defaults to modal defaults defined in service
+            angular.extend(tempModalDefaults, modalDefaults, customModalDefaults);
 
-          //Map modal.html $scope custom properties to defaults defined in service
-          angular.extend(tempModalOptions, modalOptions, customModalOptions);
+            //Map modal.html $scope custom properties to defaults defined in service
+            angular.extend(tempModalOptions, modalOptions, customModalOptions);
 
-          if (!tempModalDefaults.controller) {
-              tempModalDefaults.controller = function ($scope, $uibModalInstance) {
-                  $scope.modalOptions        = tempModalOptions;
-                  $scope.modalOptions.ok     = function (/*result*/) { $uibModalInstance.close();   };
-                  $scope.modalOptions.cancel = function (/*reason*/) { $uibModalInstance.dismiss(); };
-              }
-          }
+            if (!tempModalDefaults.controller) {
+                tempModalDefaults.controller = function($scope, $uibModalInstance) {
+                    $scope.modalOptions        = tempModalOptions;
+                    $scope.modalOptions.ok     = function(/*result*/) {
+                        $uibModalInstance.close();
+                    };
+                    $scope.modalOptions.cancel = function(/*reason*/) {
+                        $uibModalInstance.dismiss();
+                    };
+                }
+            }
 
-          return $uibModal.open(tempModalDefaults).result;
-      };
-  }]
+            return $uibModal.open(tempModalDefaults).result;
+        };
+    }]
 );
 
+/**
+ * Provides the uiSrvc.alert dialog service.
+ */
+siteApp.service('uiAlert', ['$uibModal', function($uibModal) {
+
+    var defaultModals = {
+        'alert' : {
+            settings: {
+                type  : 'alert',
+                btnOk : false,
+                btnCxl: 'Close',
+                title : 'Attention Required!',
+                text  : '<strong>OMFGoshWJH</strong> This is a test of your applications Emergency Alert System.' +
+                '<br /><br />Programmers in your immediate area are being advised to reconsider broadcasting alerts ' +
+                'that are lacking the `text` option. ;)'
+            },
+            options : {}
+        },
+        'info'  : {
+            settings: {
+                type  : 'info',
+                btnOk : false,
+                btnCxl: 'Close',
+                title : 'For Your Information',
+                text  : 'All those unseen details in a Leonardo da Vinci painting combine to produce something that’s just ' +
+                'stunning, like a thousand barely audible voices all singing in tune. Great software, likewise, ' +
+                'requires a fanatical devotion to beauty. If you look inside good software, you find that parts ' +
+                'no one is ever supposed to see are beautiful too.' +
+                '<br /><br />Speaking of beautiful code, your\'s is missing the `text` setting.'
+            },
+            options : {}
+        },
+        'confirm'  : {
+            settings: {
+                type   : 'confirm',
+                title  : 'Action Required',
+                text   : 'A confirm dialog is nothing without a strong action to take when the user responds.  Since your confirm settings don\'t ' +
+                'inlude an action setting, now would be a great time for you to take a strong action!<br /><br />Please confirm that you will get ' +
+                'on this bug right away by clicking OK.',
+                emitCxl: true,
+                action: function(response) { return; }
+            },
+            options : {}
+        },
+        'window': {
+            settings: {
+                type  : 'window',
+                title : 'Application Window',
+                text  : 'Defining a Window Modal: <ol>' +
+                '<li>Add window content as a tempalte: &lt;script type="text/ng-template" id="name-goes-here.html">HTML goes here&lt;/script></li>' +
+                '<li><strong>config.settings:</strong> contentUrl: full id attribute used in script tag</li>' +
+                '</ol>',
+                action: function(response) { return; }
+            },
+            options : {}
+        }
+    };
+
+    var modalSettings = {
+        type       : null,  // Allowed values: alert, info (default), confirm, window
+        btnOk      : null,  // Set to false to exlude
+        btnCxl     : null,  // Set to false to exlude
+        title      : null,  // Modal window title
+        text       : null,  // Modal window contents. Required for types alert and info.
+        action     : null,  // Function to call when you clicks button.  Not used for types alert and info.
+        emitCxl    : false, // Set to true to return false to the `action` function when the modal is dismissed in any way other than the OK button.
+        contentUrl : null   // A path to a template representing modal's content.  Only used with and required for `window` type modals.
+    };
+
+    var modalOptions = {
+        animation: true,
+        appendTo : 'body',   // Appends the modal to a specific element.  Example: $document.find('aside').eq(0))
+        backdrop : 'static', // Allowed values: true (default), false (no backdrop), 'static' (disables modal closing by click on the backdrop).
+        keyboard : true      // Indicates whether the dialog should be closable by hitting the ESC key.
+    };
+
+    this.showModal = function(customSettings, customOptions) {
+        if (!!customOptions == false) customOptions = {};
+
+        // Create temp objects to work with since we're in a singleton service
+        var instanceSettings = {};
+        var instanceOptions  = {};
+
+        // Map modal.html $scope custom properties to defaults defined in service
+        angular.extend(instanceSettings, modalSettings, customSettings);
+
+        // Map angular-ui modal custom defaults to modal defaults defined in service
+        angular.extend(instanceOptions, modalOptions, customOptions);
+
+        /**
+         * Creates a modal of the type the user is trying to create to inform them of their invalid settings
+         * @param {string=} type
+         * @returns {boolean}
+         */
+        var invalidSettingsResponse = function(type) {
+            instanceSettings = copyObject(modalSettings);
+
+            if (type !== undefined) ui.modal(defaultModals[type]);
+            else {
+                ui.modal({
+                    type: 'alert',
+                    title: 'Forget Something?',
+                    text: "<strong>Oops!</strong> Your modal definition is missing the `type` setting."
+                });
+            }
+
+            return false;
+        };
+
+        switch (customSettings.type) {
+            case 'alert': // requires text
+                if (instanceSettings.text   === null) return invalidSettingsResponse('alert');
+                instanceSettings.templateUrl = 'components/templates/uiAlertModal.html';
+                if (instanceSettings.title  === null) instanceSettings.title  = 'Attention Required!';
+                if (instanceSettings.btnOk  === null) instanceSettings.btnOk  = false;
+                if (instanceSettings.btnCxl === null) instanceSettings.btnCxl = 'Close';
+                if (instanceSettings.action !== null) instanceSettings.action = null;
+                break;
+            case 'info': // requires text
+                if (instanceSettings.text   === null) return invalidSettingsResponse('info');
+                instanceSettings.templateUrl = 'components/templates/uiInfoModal.html';
+                if (instanceSettings.title  === null) instanceSettings.title  = 'Information';
+                if (instanceSettings.btnOk  === null) instanceSettings.btnOk  = false;
+                if (instanceSettings.btnCxl === null) instanceSettings.btnCxl = 'Close';
+                if (instanceSettings.action !== null) instanceSettings.action = null;
+                break;
+            case 'confirm': // requires action
+                if (instanceSettings.action === null) return invalidSettingsResponse('confirm');
+                instanceSettings.templateUrl = 'components/templates/uiConfirmModal.html';
+                if (instanceSettings.title  === null) instanceSettings.title  = 'Confirmation Required';
+                if (instanceSettings.text   === null) instanceSettings.text   = 'Please confirm that you wish to proceed by clicking OK.';
+                if (instanceSettings.btnOk  === null) instanceSettings.btnOk  = 'OK';
+                if (instanceSettings.btnCxl === null) instanceSettings.btnCxl = 'Cancel';
+                break;
+            case 'window': // requires contentUrl
+                if (instanceSettings.contentUrl === null) return invalidSettingsResponse('window');
+                instanceSettings.text        = '';
+                instanceSettings.templateUrl = 'components/templates/uiWindowModal.html';
+                if (instanceSettings.title  === null) instanceSettings.title = 'Application Window';
+                if (instanceSettings.btnOk  === null) instanceSettings.btnOk = 'Save';
+                if (instanceSettings.btnCxl === null) instanceSettings.btnCxl = 'Cancel';
+                break;
+            default:
+                return invalidSettingsResponse();
+        }
+
+        return this.show(instanceSettings, instanceOptions);
+    };
+
+    this.show = function(instanceSettings, instanceOptions) {
+        if (!instanceOptions.controller) {
+            instanceOptions.controller = function($scope, $uibModalInstance) {
+                $scope.modalSettings        = instanceSettings;
+                $scope.modalSettings.ok     = function(/*result*/) { $uibModalInstance.close(); };
+                $scope.modalSettings.cancel = function(/*reason*/) { $uibModalInstance.dismiss(); };
+            }
+        }
+
+        return $uibModal.open(instanceOptions).result;
+    };
+}]);
+
 siteApp.directive('uiPanel',
-  ['uiSrvc', function (uiSrvc) {
-      return {
-          restrict   : 'E',
-          scope      : true,
-          templateUrl: 'components/templates/uiPanel.html',
-          controller : function ($scope, $element, $attrs) {
-              var ui = uiSrvc.services;
-              ui.panel.init($attrs.idx);
-              $scope.canShow = function () { return ui.panel.show($attrs.idx); };
-              $scope.getType = function () { return ui.panel.type($attrs.idx); };
-              $scope.getText = function () { return ui.panel.text($attrs.idx); };
-              $scope.getMrgn = function () { return !!$attrs.mrgn ? {'margin': $attrs.mrgn} : ''; };
-          }
-      };
-  }]
+    ['uiSrvc', function(uiSrvc) {
+        return {
+            restrict   : 'E',
+            scope      : true,
+            templateUrl: 'components/templates/uiPanel.html',
+            controller : function($scope, $element, $attrs) {
+                var ui = uiSrvc.services;
+                ui.panel.init($attrs.idx);
+                $scope.canShow = function() {
+                    return ui.panel.show($attrs.idx);
+                };
+                $scope.getType = function() {
+                    return ui.panel.type($attrs.idx);
+                };
+                $scope.getText = function() {
+                    return ui.panel.text($attrs.idx);
+                };
+                $scope.getMrgn = function() {
+                    return !!$attrs.mrgn ? {'margin': $attrs.mrgn} : '';
+                };
+            }
+        };
+    }]
 );

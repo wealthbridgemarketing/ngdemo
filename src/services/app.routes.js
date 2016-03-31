@@ -46,10 +46,10 @@ siteApp.config(function ($locationProvider, $stateProvider, $urlRouterProvider) 
             },
             resolve    : {
                 appContent  : function (LoadExternal) {
-                    return LoadExternal.load(this.data.ajaxBaseURI + 'content.json', 'content', '2 min');
+                    return LoadExternal.load(this.data.ajaxBaseURI + 'content.json', 'content', '10 sec');
                 },
                 appTemplates: function (LoadExternal) {
-                    return LoadExternal.load(this.data.ajaxBaseURI + 'templates.json', 'templates', '1 day');
+                    return LoadExternal.load(this.data.ajaxBaseURI + 'templates.json', 'templates', '5s');
                 }
             }
         })

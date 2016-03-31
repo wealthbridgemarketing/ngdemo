@@ -65,7 +65,7 @@ function ($interval,
         ui      : uiSrvc,
         log     : uiSrvc.log
     };
-    service.log([['[ts] Basic BaseSrvc Services','i','black'],service]);
+    // service.log([['[ts] Basic BaseSrvc Services','i','black'],service]);
 
     // watch for DataSrvc.AppReadyState=true then perform each service providers onready procedure
     var watcher = $interval(function() { if (DataSrvc.AppReadyState === true) { resolve(); } }, 100),
@@ -134,7 +134,7 @@ function ($interval,
                 users   : UserSrvc['service']
             };
             angular.extend(service, appServices);
-            service.log([['[ts] Full BaseSrvc Services','i','black'],service]);
+            // service.log([['[ts] Full BaseSrvc Services','i','black'],service]);
 
             return;
         };
