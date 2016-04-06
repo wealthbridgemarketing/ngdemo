@@ -151,7 +151,9 @@ module.exports = function (grunt) {
                 files  : [{
                     src : [
                         bowerPath + 'angular/angular.js', //.min
-                        bowerPath + 'angular-local-storage/dist/angular-local-storage.js',
+                        bowerPath + 'angular-animate/angular-animate.min.js',
+                        bowerPath + 'angular-touch/angular-touch.min.js',
+                        bowerPath + 'angular-local-storage/dist/angular-local-storage.js', // min ver creates bug
                         bowerPath + 'angular-ui-router/release/angular-ui-router.min.js',
                         bowerPath + 'angular-css/angular-css.min.js',
                         bowerPath + 'angular-bootstrap/ui-bootstrap-tpls.min.js',
@@ -242,6 +244,18 @@ module.exports = function (grunt) {
             }
         },
 
+// JSONMIN - Minimize the data.json files
+        minjson: {
+            dist: {
+                files  : [{
+                    expand: true,
+                    cwd   : 'src/',
+                    src   : ['**/*.json', '!assets/bower_components/**/*.json'],
+                    dest  : 'dist/'
+                }]
+            }
+        },
+
 // IMAGEMIN - Strips the metadata from images in order to reduce their filesize.
         imagemin: {
             dist: {
@@ -262,7 +276,7 @@ module.exports = function (grunt) {
                     dot   : true,
                     expand: true,
                     cwd   : 'src/',
-                    src   : ['**/*.*', '!**/.gitkeep', '!**/*.{scss,js,html}', '!**/*.' + imgExts, '!__notes__/**/*.*', '!assets/bower_components/**/*.*'],
+                    src   : ['**/*.*', '!**/.gitkeep', '!**/*.{scss,js,html,json}', '!**/*.' + imgExts, '!__notes__/**/*.*', '!assets/bower_components/**/*.*'],
                     dest  : 'dist/'
                 }]
             },
@@ -314,6 +328,11 @@ module.exports = function (grunt) {
                 tasks  : ['app-html'],
                 options: {interrupt: true}
             },
+            json: {
+                files  : ['src/**/*.json', 'src/!assets/bower_components/**/*.json'],
+                tasks  : ['app-json'],
+                options: {interrupt: true}
+            },
             img       : {
                 files  : ['src/**/*.' + imgExts, 'src/!assets/bower_components/**/*.' + imgExts],
                 tasks  : ['app-imgs'],
@@ -324,10 +343,10 @@ module.exports = function (grunt) {
 // CONCURRENT - Run multiple tasks at the same time
         concurrent: {
             options: {limit: 8}, // num of processor cores
-            app    : ['app-css', 'app-js', 'app-html', 'app-copy', 'app-imgs'],
+            app    : ['app-css', 'app-js', 'app-html', 'app-json', 'app-copy', 'app-imgs'],
             vdr    : ['vdr-js', 'vdr-css', 'vdr-copy'],
             //all: ['concurrent:app', 'concurrent:vdr'], the version below is faster
-            all    : ['app-css', 'app-js', 'app-html', 'app-copy', 'app-imgs', 'vdr-js', 'vdr-css', 'vdr-copy']
+            all    : ['app-css', 'app-js', 'app-html', 'app-json', 'app-copy', 'app-imgs', 'vdr-js', 'vdr-css', 'vdr-copy']
         }
     });
 
@@ -348,6 +367,7 @@ module.exports = function (grunt) {
     grunt.registerTask('app-css', 'Compile sass, concant, minimize and copy all app css to dist', ['app-css-assets', 'app-css-custom']);
     grunt.registerTask('app-js', 'Uglify, concant and copy app js files to dist', ['clean:stage_js_app', 'uglify:appjs', 'concat:appjs']);
     grunt.registerTask('app-html', 'Minimize html files and copy to dist', ['htmlmin']);
+    grunt.registerTask('app-json', 'Minimize json files and copy to dist', ['minjson']);
     grunt.registerTask('app-copy', 'Copy all miscellaneous app files to dist', ['copy:misc']);
     grunt.registerTask('app-imgs', 'Minimize images and copy to dist', ['imagemin']);
     grunt.registerTask('buildapp', 'Run the app tasks concurrently', ['concurrent:app']);

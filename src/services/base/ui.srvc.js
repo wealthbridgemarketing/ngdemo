@@ -640,7 +640,7 @@ siteApp.service('uiConfirm',
 /**
  * Provides the uiSrvc.alert dialog service.
  */
-siteApp.service('uiAlert', ['$uibModal', function($uibModal) {
+siteApp.service('uiModal', ['$uibModal', function($uibModal) {
 
     var defaultModals = {
         'alert' : {
@@ -710,10 +710,14 @@ siteApp.service('uiAlert', ['$uibModal', function($uibModal) {
         animation: true,
         appendTo : 'body',   // Appends the modal to a specific element.  Example: $document.find('aside').eq(0))
         backdrop : 'static', // Allowed values: true (default), false (no backdrop), 'static' (disables modal closing by click on the backdrop).
-        keyboard : true      // Indicates whether the dialog should be closable by hitting the ESC key.
+        keyboard : true,     // Indicates whether the dialog should be closable by hitting the ESC key.
+        resolve  : {
+            data: function () { return resource; }
+        }
     };
 
-    this.showModal = function(customSettings, customOptions) {
+    this.showModal = function(customSettings, customOptions)
+    {
         if (!!customOptions == false) customOptions = {};
 
         // Create temp objects to work with since we're in a singleton service
@@ -785,10 +789,14 @@ siteApp.service('uiAlert', ['$uibModal', function($uibModal) {
 
         return this.show(instanceSettings, instanceOptions);
     };
+    // end this.showModal
 
-    this.show = function(instanceSettings, instanceOptions) {
-        if (!instanceOptions.controller) {
-            instanceOptions.controller = function($scope, $uibModalInstance) {
+    this.show = function(instanceSettings, instanceOptions)
+    {
+        if (!instanceOptions.controller)
+        {
+            instanceOptions.controller = function($scope, $uibModalInstance)
+            {
                 $scope.modalSettings        = instanceSettings;
                 $scope.modalSettings.ok     = function(/*result*/) { $uibModalInstance.close(); };
                 $scope.modalSettings.cancel = function(/*reason*/) { $uibModalInstance.dismiss(); };
