@@ -18,46 +18,40 @@
         <i class="fa fa-coffee"></i>
         This is an <strong>.alert</strong>. Use this to show important messages to the user.
       </div>
-      <h3>Personal info</h3>
+      <h3>Personal Info</h3>
 
       <form class="form-horizontal" role="form">
         <div class="form-group">
           <label class="col-lg-3 control-label">First name:</label>
           <div class="col-lg-8">
-            <input class="form-control" type="text" value="Jane">
+            <input class="form-control" type="text" ng-model="app.data.user.first_name">
           </div>
         </div>
         <div class="form-group">
           <label class="col-lg-3 control-label">Last name:</label>
           <div class="col-lg-8">
-            <input class="form-control" type="text" value="Bishop">
+            <input class="form-control" type="text" ng-model="app.data.user.last_name">
           </div>
         </div>
         <div class="form-group">
           <label class="col-lg-3 control-label">Company:</label>
           <div class="col-lg-8">
-            <input class="form-control" type="text" value="">
+            <input class="form-control" type="text" ng-model="app.data.user.company">
           </div>
         </div>
         <div class="form-group">
           <label class="col-lg-3 control-label">Email:</label>
           <div class="col-lg-8">
-            <input class="form-control" type="text" value="janesemail@gmail.com">
+            <input class="form-control" type="text" ng-pattern="app.pattern.email" ng-model="app.data.user.email"> <!-- ng-pattern="{{base.pattern['email']}}" -->
           </div>
         </div>
         <div class="form-group">
           <label class="col-lg-3 control-label">Time Zone:</label>
           <div class="col-lg-8">
             <div class="ui-select">
-              <select id="user_time_zone" class="form-control">
-                <option value="Hawaii">(GMT-10:00) Hawaii</option>
-                <option value="Alaska">(GMT-09:00) Alaska</option>
-                <option value="Pacific Time (US &amp; Canada)">(GMT-08:00) Pacific Time (US &amp; Canada)</option>
-                <option value="Arizona">(GMT-07:00) Arizona</option>
-                <option value="Mountain Time (US &amp; Canada)">(GMT-07:00) Mountain Time (US &amp; Canada)</option>
-                <option value="Central Time (US &amp; Canada)" selected="selected">(GMT-06:00) Central Time (US &amp; Canada)</option>
-                <option value="Eastern Time (US &amp; Canada)">(GMT-05:00) Eastern Time (US &amp; Canada)</option>
-                <option value="Indiana (East)">(GMT-05:00) Indiana (East)</option>
+              <select class="form-control"
+                      ng-model="app.data.user.timezone_id"
+                      ng-options="tz.id as tz.name for tz in app.data.user.meta.timezones | orderBy: tz.name">
               </select>
             </div>
           </div>
@@ -65,25 +59,25 @@
         <div class="form-group">
           <label class="col-md-3 control-label">Username:</label>
           <div class="col-md-8">
-            <input class="form-control" type="text" value="janeuser">
+            <input class="form-control" type="text" ng-model="app.data.user.username">
           </div>
         </div>
         <div class="form-group">
           <label class="col-md-3 control-label">Password:</label>
           <div class="col-md-8">
-            <input class="form-control" type="password" value="11111122333">
+            <input class="form-control" type="password" ng-model="app.data.user.password">
           </div>
         </div>
         <div class="form-group">
           <label class="col-md-3 control-label">Confirm password:</label>
           <div class="col-md-8">
-            <input class="form-control" type="password" value="11111122333">
+            <input class="form-control" type="password" ng-model="app.data.user.password2">
           </div>
         </div>
         <div class="form-group">
           <label class="col-md-3 control-label"></label>
           <div class="col-md-8">
-            <input type="button" class="btn btn-primary" value="Save Changes">
+            <input type="button" class="btn btn-primary" value="Save Changes" ng-click="app.users.save()">
             <span></span>
             <input type="reset" class="btn btn-default" value="Cancel">
           </div>

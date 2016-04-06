@@ -1,3 +1,5 @@
+/* global log */
+
 /**
  * uiSrvc - reusable application service library
  *
@@ -120,7 +122,7 @@ siteApp.factory('uiSrvc',
             })(window.location.search.substr(1).split('&'));
 
             // Console Logging - enhances the angularjs $log functionality
-            var log = function(msg, type, style) {
+            var logger = function(msg, type, style) {
 
                 // allows multiple logs to be passed in using an array
                 if (Array.isArray(msg)) {
@@ -571,11 +573,13 @@ siteApp.factory('uiSrvc',
                     }
                 }
             };
-
+            
+            // Assign the logger function to the super-global `log` defined in assets/js/lib.js
+            log = logger;
+            
             // a simple object with the various functions
             var services = {
                 qs     : qs,
-                log    : log,
                 confirm: confirm,
                 status : status,
                 panel  : panels
@@ -814,7 +818,7 @@ siteApp.directive('uiPanel',
             scope      : true,
             templateUrl: 'components/templates/uiPanel.html',
             controller : function($scope, $element, $attrs) {
-                var ui = uiSrvc.services;
+                var ui = uiSrvc;
                 ui.panel.init($attrs.idx);
                 $scope.canShow = function() {
                     return ui.panel.show($attrs.idx);
@@ -832,3 +836,6 @@ siteApp.directive('uiPanel',
         };
     }]
 );
+
+// Use this filter with ng-bind-html to prevent the unsafe warning
+siteApp.filter('trusted', function($sce) { return $sce.trustAsHtml; });

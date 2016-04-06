@@ -40,11 +40,11 @@
  * setting the AppReadyState to true in the DataSrvc.  The AuthSrvc is the only other service in the entire
  * system that has a direct connection to the DataSrvc and httpSrvc services.
  *
- * Finally there is SiteCtrl who could be considered a spouse or business partner of BaseSrvc.  It sits
+ * Finally there is AppCtrl who could be considered a spouse or business partner of BaseSrvc.  It sits
  * out front and is the only service that matters in terms of building the UI. The UI-Router and Breadcrumbs
- * services work with it directly.  Everything BaseSrvc does is to support SiteCtrl.  All of the public
+ * services work with it directly.  Everything BaseSrvc does is to support AppCtrl.  All of the public
  * services provided by the custom app services, uiSrvc and DataSrvc are defined in the $service var below
- * and available to everybody using the SiteCtrl service, which is everything you see on the front end.
+ * and available to everybody using the AppCtrl service, which is everything you see on the front end.
  *
  *
  *
@@ -60,65 +60,53 @@ function ($interval,
 {
     // define the basic services that are available early
     var service = {
-        ls      : DataSrvc.locStorage,
-        pattern : DataSrvc.regxPatterns,
-        ui      : uiSrvc,
-        log     : uiSrvc.log
+        ready  : false,
+        ls     : DataSrvc.locStorage,
+        pattern: DataSrvc.regxPatterns,
+        ui     : uiSrvc
     };
-    // service.log([['[ts] Basic BaseSrvc Services','i','black'],service]);
+    //log([['[ts] Basic BaseSrvc Services','i','black'],service]);
 
     // watch for DataSrvc.AppReadyState=true then perform each service providers onready procedure
     var watcher = $interval(function() { if (DataSrvc.AppReadyState === true) { resolve(); } }, 100),
         resolve = function () {
             $interval.cancel(watcher);
 
-            var onready;
+            // determine if a service requires data when loaded
+            var srvcRequiresData = function(service) {
+                if (typeofObject(service, 'onready')      === 'object'
+                 && typeofObject(service, 'onready.api')  === 'string'
+                 && typeofObject(service, 'onready.init') === 'function')
+                {
+                    return true;
+                }
+                else return false;
+            };
             
             // remote api calls to fetch the data for each service
-            if (typeofObject(DrillSrvc,'onready')==='object') {
-                onready = DrillSrvc['onready'];
-                httpSrvc.select(onready['api']).then(function(data) { onready.init(data); });
-            }
-            if (typeofObject(ChartSrvc,'onready')==='object') {
-                onready = ChartSrvc['onready'];
-                httpSrvc.select(onready['api']).then(function(data) { onready.init(data); });
-            }
-            if (typeofObject(LayoutSrvc,'onready')==='object') {
-                onready = LayoutSrvc['onready'];
-                httpSrvc.select(onready['api']).then(function(data) { onready.init(data); });
-            }
-            if (typeofObject(PresetsSrvc,'onready')==='object') {
-                onready = PresetsSrvc['onready'];
-                httpSrvc.select(onready['api']).then(function(data) { onready.init(data); });
-            }
-            if (typeofObject(CstmViewsSrvc,'onready')==='object') {
-                onready = CstmViewsSrvc['onready'];
-                httpSrvc.select(onready['api']).then(function(data) { onready.init(data); });
-            }
-            if (typeofObject(SnapshotsSrvc,'onready')==='object') {
-                onready = SnapshotsSrvc['onready'];
-                httpSrvc.select(onready['api']).then(function(data) { onready.init(data); });
-            }
-            if (typeofObject(UserSrvc,'onready')==='object') {
-                onready = UserSrvc['onready'];
-                httpSrvc.select(onready['api']).then(function(data) { onready.init(data); });
-            }
+            if (srvcRequiresData(    DrillSrvc)) httpSrvc.select(    DrillSrvc.onready.api).then(function(data) {     DrillSrvc.onready.init(data); });
+            if (srvcRequiresData(    ChartSrvc)) httpSrvc.select(    ChartSrvc.onready.api).then(function(data) {     ChartSrvc.onready.init(data); });
+            if (srvcRequiresData(   LayoutSrvc)) httpSrvc.select(   LayoutSrvc.onready.api).then(function(data) {    LayoutSrvc.onready.init(data); });
+            if (srvcRequiresData(  PresetsSrvc)) httpSrvc.select(  PresetsSrvc.onready.api).then(function(data) {   PresetsSrvc.onready.init(data); });
+            if (srvcRequiresData(CstmViewsSrvc)) httpSrvc.select(CstmViewsSrvc.onready.api).then(function(data) { CstmViewsSrvc.onready.init(data); });
+            if (srvcRequiresData(SnapshotsSrvc)) httpSrvc.select(SnapshotsSrvc.onready.api).then(function(data) { SnapshotsSrvc.onready.init(data); });
+            if (srvcRequiresData(     UserSrvc)) httpSrvc.select(     UserSrvc.onready.api).then(function(data) {      UserSrvc.onready.init(data); });
 
             // define the services available to service providers via their extend() method
             var providerServices = {
+                data  : DataSrvc.AppData,
                 model : DataSrvc.AppDataClass,
-                ui    : uiSrvc,
-                log   : uiSrvc.log
+                ui    : uiSrvc
             };
 
             // send the providerServices to each service provider
-            if (typeofObject(DrillSrvc,    'service.extend')==='function') DrillSrvc    ['service'].extend(providerServices);
-            if (typeofObject(ChartSrvc,    'service.extend')==='function') ChartSrvc    ['service'].extend(providerServices);
-            if (typeofObject(LayoutSrvc,   'service.extend')==='function') LayoutSrvc   ['service'].extend(providerServices);
-            if (typeofObject(PresetsSrvc,  'service.extend')==='function') PresetsSrvc  ['service'].extend(providerServices);
-            if (typeofObject(CstmViewsSrvc,'service.extend')==='function') CstmViewsSrvc['service'].extend(providerServices);
-            if (typeofObject(SnapshotsSrvc,'service.extend')==='function') SnapshotsSrvc['service'].extend(providerServices);
-            if (typeofObject(UserSrvc,     'service.extend')==='function') UserSrvc     ['service'].extend(providerServices);
+            if (typeofObject(    DrillSrvc,'onready.extend')==='function')     DrillSrvc.onready.extend(providerServices);
+            if (typeofObject(    ChartSrvc,'onready.extend')==='function')     ChartSrvc.onready.extend(providerServices);
+            if (typeofObject(   LayoutSrvc,'onready.extend')==='function')    LayoutSrvc.onready.extend(providerServices);
+            if (typeofObject(  PresetsSrvc,'onready.extend')==='function')   PresetsSrvc.onready.extend(providerServices);
+            if (typeofObject(CstmViewsSrvc,'onready.extend')==='function') CstmViewsSrvc.onready.extend(providerServices);
+            if (typeofObject(SnapshotsSrvc,'onready.extend')==='function') SnapshotsSrvc.onready.extend(providerServices);
+            if (typeofObject(     UserSrvc,'onready.extend')==='function')      UserSrvc.onready.extend(providerServices);
             
             // complete the services definition
             var appServices = {
@@ -134,7 +122,10 @@ function ($interval,
                 users   : UserSrvc['service']
             };
             angular.extend(service, appServices);
-            // service.log([['[ts] Full BaseSrvc Services','i','black'],service]);
+            //log([['[ts] Full BaseSrvc Services','i','black'],service]);
+
+            // notify siteApp that base service is ready
+            service.ready = true;
 
             return;
         };

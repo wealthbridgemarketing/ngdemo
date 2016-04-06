@@ -4,15 +4,9 @@
 baseApp.factory('LayoutSrvc', [function () 
 {
     var base = {},
-        log  = function(m){console.log(m);},
-        apiEndpoint = 'layouts/get/all',
-        readyState  = false;
+        apiEndpoint = 'layouts/get/all';
 
-
-    var extend = function (services) {
-        base = services;
-        log  = base.log;
-    };
+    var extend = function (services) { base = services; };
 
     /**
      * Create the data object
@@ -29,17 +23,13 @@ baseApp.factory('LayoutSrvc', [function ()
                 };
             }
             base.model.save('layouts', data);
-            readyState = true;
         };
-
         //createModel();
     };
 
     // return this factories services
     return {
-        'service': {
-            'ready' : readyState
-        },
+        'service': {},
         'onready': {
             'api'   : apiEndpoint,
             'init'  : init,

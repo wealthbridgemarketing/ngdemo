@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="app.site" ng-controller="SiteCtrl as app">
+<html ng-app="siteApp" ng-controller="AppCtrl as app">
 
   <head>
     <meta charset="utf-8" />
@@ -10,9 +10,10 @@
 
   <body>
     
-    <header ng-include="'components/header/header-view.html'"></header>
-    
-    <div ui-view></div>
+    <header ng-include="'components/header/view.html'"></header>
+
+    <div ng-include="'components/loading/view.html'"></div>
+    <div ng-show="app.ready" ui-view></div>
     
     <footer><hr /></footer>
     

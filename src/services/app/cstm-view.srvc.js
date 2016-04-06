@@ -4,15 +4,10 @@
 baseApp.factory('CstmViewsSrvc', [function () 
 {
     var base = {},
-        log  = function(m){console.log(m);},
-        apiEndpoint = 'cstmviews/get/all',
-        readyState  = false;
+        apiEndpoint = 'cstmviews/get/all';
 
 
-    var extend = function (services) {
-        base = services;
-        log  = base.log;
-    };
+    var extend = function (services) { base = services; };
 
     /**
      * Create the data object
@@ -29,17 +24,13 @@ baseApp.factory('CstmViewsSrvc', [function ()
                 };
             }
             base.model.save('cstmviews', data);
-            readyState = true;
         };
-
         //createModel();
     };
 
     // return this factories services
     return {
-        'service': {
-            'ready' : readyState
-        },
+        'service': {},
         'onready': {
             'api'   : apiEndpoint,
             'init'  : init,

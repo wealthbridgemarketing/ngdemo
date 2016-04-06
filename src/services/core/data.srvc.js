@@ -3,7 +3,7 @@
 /**
  * Data Service
  */
-coreApp.factory('DataSrvc', ['CFG', 'localStorageService', function (CFG,localStorageService) {
+coreApp.factory('DataSrvc', ['CFG', 'localStorageService', function (CFG, localStorageService) {
     /**
      * Local Storage Service
      * @link https://github.com/grevory/angular-local-storage
@@ -103,8 +103,21 @@ coreApp.factory('DataSrvc', ['CFG', 'localStorageService', function (CFG,localSt
      */
     var appData = {},
         clsData = {
-            save  : function(key,val) { appData[key] = val;               },
-            merge : function(key,val) { angular.merge(appData[key], val); },
+            save  : function(key,val) {
+                if (/\./.test(key)===false) appData[key] = val;
+                else {
+                    var obj = "['"+ key.replace(/\./,"']['") +"']";
+                        type = typeofObject(val);
+                    switch (type) {
+                        case 'string': val = '"' + val + '"'; break;
+                        case 'object': val = '{' + val + '}'; break;
+                        case 'null'  : val = null;            break;
+                        default      : val = val;             break;
+                    }
+                    eval('appData'+obj+' = '+val);
+                }
+            },
+            merge : function(key,val) { angular.extend(appData[key], val); },
             remove: function(key)     { delete appData[key];              }
     };
 

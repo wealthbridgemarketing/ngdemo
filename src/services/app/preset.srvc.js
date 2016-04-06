@@ -4,15 +4,9 @@
 baseApp.factory('PresetsSrvc', [function () 
 {
     var base = {},
-        log  = function(m){console.log(m);},
-        apiEndpoint = 'presets/get/all',
-        readyState  = false;
+        apiEndpoint = 'presets/get/all';
 
-
-    var extend = function (services) {
-        base = services;
-        log  = base.log;
-    };
+    var extend = function (services) { base = services; };
 
     /**
      * Create the data object
@@ -29,17 +23,13 @@ baseApp.factory('PresetsSrvc', [function ()
                 };
             }
             base.model.save('presets', data);
-            readyState = true;
         };
-
         //createModel();
     };
 
     // return this factories services
     return {
-        'service': {
-            'ready' : readyState
-        },
+        'service': {},
         'onready': {
             'api'   : apiEndpoint,
             'init'  : init,

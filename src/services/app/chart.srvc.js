@@ -4,15 +4,9 @@
 baseApp.factory('ChartSrvc', [function ()
 {
     var base = {},
-        log  = function(m){console.log(m);},
-        apiEndpoint = 'chartdefs/get/all',
-        readyState  = false;
+        apiEndpoint = 'chartdefs/get/all';
 
-
-    var extend = function (services) {
-        base = services;
-        log  = base.log;
-    };
+    var extend = function (services) { base = services; };
 
     /**
      * Create the data object
@@ -29,17 +23,13 @@ baseApp.factory('ChartSrvc', [function ()
                 };
             }
             base.model.save('charts', data);
-            readyState = true;
         };
-
         //createModel();
     };
 
     // return this factories services
     return {
-        'service': {
-            'ready' : readyState
-        },
+        'service': {},
         'onready': {
             'api'   : apiEndpoint,
             'init'  : init,

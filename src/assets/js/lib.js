@@ -1,4 +1,6 @@
-
+// log is replaced by ui.logger once that service loads.
+var log = function(m){console.log(m);};
+    
 /**
  * Performs a date calculation
  *
@@ -118,11 +120,11 @@ function typeofObject(obj, path) {
         if (Object.prototype.toString.call(o) === '[object Date]') return 'date';
         else if (t !== 'object') return t;
         else return o === null ? 'null' : 'object'
-    }
+    };
 
-    objType = typeof obj;
-    if (objType === 'undefined') return 'undefined';          // obj var is not an object
-    else if (!!path === false) return realType(objType, obj); // path var not set or generally invalid
+    objType = realType(typeof obj, obj);
+    if (['null','undefined'].indexOf(objType) !== -1) return objType; // obj var is not an object
+    else if (!!path === false) return objType; // path var not set or generally invalid
 
     var props = path.split('.'), l = props.length, currObj = obj, objType, i = 0;
     for (; i < l; i++) {

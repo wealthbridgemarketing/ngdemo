@@ -5,7 +5,7 @@ siteApp.controller('XferCtrl', ['$scope', 'Breadcrumbs', function($scope, Breadc
   Breadcrumbs.set([
     { text: 'Transfer Cash' }
   ]);
-  
+
   // default values are make everything easier
   var dflts = {
     AMT:  null,

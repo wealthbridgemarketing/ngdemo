@@ -5,6 +5,6 @@ siteApp.controller('ProfileCtrl', ['$scope', 'Breadcrumbs', function($scope, Bre
     Breadcrumbs.set([
       { text: 'Edit Profile' }
     ]);
-    
+
 }]);
   

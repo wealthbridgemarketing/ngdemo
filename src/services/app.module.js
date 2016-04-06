@@ -20,12 +20,12 @@
  * @todo Add Highcharts Demo
  * @todo Add Global DevMode to uiSrvc
  */
-var coreApp = angular.module('app.core', ['LocalStorageModule']);
-var baseApp = angular.module('app.main', ['app.core']);
-var siteApp = angular.module('app.site', ['ui.router',      // AngularUI Router - Replacement for ngRoute (https://github.com/angular-ui/ui-router)
-                                          'door3.css',      // AngularCSS: Dynamically inject stylesheets as needed (https://github.com/castillo-io/angular-css)
-                                          'ui.bootstrap',   // UI Bootstrap: Bootstrap components written in AngularJS (http://angular-ui.github.io/bootstrap)
-                                          'app.main']);
+var coreApp = angular.module('coreApp', ['LocalStorageModule']);
+var baseApp = angular.module('baseApp', ['coreApp']);
+var siteApp = angular.module('siteApp', ['ui.router',     // AngularUI Router - Replacement for ngRoute (https://github.com/angular-ui/ui-router)
+                                         'door3.css',     // AngularCSS: Dynamically inject stylesheets as needed (https://github.com/castillo-io/angular-css)
+                                         'ui.bootstrap',  // UI Bootstrap: Bootstrap components written in AngularJS (http://angular-ui.github.io/bootstrap)
+                                         'baseApp']);
 // CORE APP CONSTANTS
 coreApp.constant('CFG', {
     DS            : '/',
@@ -72,9 +72,9 @@ coreApp.config(function (CFG, localStorageServiceProvider) {
 siteApp.run(['$rootScope', 'CFG', function($rootScope, CFG) {
     $rootScope.$on('$stateChangeSuccess', function (event, toState) {
         var b = CFG.APP_TITLE,
-            p = toState.data.title,
-            t = b;
-        if (p!==undefined && p!=='') t = p+' | '+b;
-        $rootScope.$emit('SiteCtrl.setPageTitle', [t]);
+            t = b,
+            p = toState.data.title;
+        if (!!p) t = p + ' | ' + b;
+        $rootScope.$emit('PageTitleSet', [t]);
     });
 }]);

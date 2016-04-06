@@ -7,14 +7,14 @@ module.exports = function (grunt) {
     require('load-grunt-tasks')(grunt);
 
     // variables used within the tasks
-    var appBanner = '/*! <%= pkg.name %> - Copyright '+'<%= grunt.template.today("yyyy") %>'+'. All Rights Reserved. Created By: '+'<%= pkg.author.name %>'+' <%= pkg.author.url %> - build: ' + '<%= grunt.template.today("yymmdd") %> */\n';
+    //var appBanner = '/*! <%= pkg.name %> - Copyright '+'<%= grunt.template.today("yyyy") %>'+'. All Rights Reserved. Created By: '+'<%= pkg.author.name %>'+' <%= pkg.author.url %> - build: ' + '<%= grunt.template.today("yymmdd") %> */\n';
 
     var appjsSrcDef = [
         'assets/js/**/*.js',
         'services/app.module.js', 'services/app.routes.js',
         'services/core/data.srvc.js', 'services/core/http.srvc.js', 'services/core/auth.srvc.js', 
         'services/base/ui.srvc.js', 'services/base/base.srvc.js',
-        'services/site/site.ctrl.js', 'services/site/theme.srvc.js', 'services/site/user.srvc.js',
+        'services/site/app.ctrl.js', 'services/site/theme.srvc.js', 'services/site/user.srvc.js',
         'services/app/**/*.js', 'components/**/*.js', 'sections/**/*.js'
     ];
 
@@ -151,8 +151,8 @@ module.exports = function (grunt) {
                 files  : [{
                     src : [
                         bowerPath + 'angular/angular.js', //.min
-                        bowerPath + 'angular-animate/angular-animate.min.js',
-                        bowerPath + 'angular-touch/angular-touch.min.js',
+                        //bowerPath + 'angular-animate/angular-animate.min.js',
+                        //bowerPath + 'angular-touch/angular-touch.min.js',
                         bowerPath + 'angular-local-storage/dist/angular-local-storage.js', // min ver creates bug
                         bowerPath + 'angular-ui-router/release/angular-ui-router.min.js',
                         bowerPath + 'angular-css/angular-css.min.js',
@@ -247,7 +247,7 @@ module.exports = function (grunt) {
 // JSONMIN - Minimize the data.json files
         minjson: {
             dist: {
-                files  : [{
+                files: [{
                     expand: true,
                     cwd   : 'src/',
                     src   : ['**/*.json', '!assets/bower_components/**/*.json'],
@@ -328,7 +328,7 @@ module.exports = function (grunt) {
                 tasks  : ['app-html'],
                 options: {interrupt: true}
             },
-            json: {
+            json      : {
                 files  : ['src/**/*.json', 'src/!assets/bower_components/**/*.json'],
                 tasks  : ['app-json'],
                 options: {interrupt: true}

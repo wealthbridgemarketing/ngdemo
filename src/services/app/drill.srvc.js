@@ -4,14 +4,9 @@
 baseApp.factory('DrillSrvc', [function ()
 {
     var base = {},
-        log  = function(m){console.log(m);},
-        apiEndpoint = 'drills/get/all',
-        readyState  = false;
+        apiEndpoint = 'drills/get/all';
 
-    var extend = function(services) {
-        base = services;
-        log  = base.log;
-    };
+    var extend = function (services) { base = services; };
 
     /**
      * Create the data object
@@ -20,7 +15,7 @@ baseApp.factory('DrillSrvc', [function ()
     var init = function(drills)
     {
         var createModel = function() {
-            log([['drills','i','silver'],drills]);
+            //log([['drills','i','silver'],drills]);
             var k = Object.keys(drills), l = k.length, i = 0, fltr, data = {};
             for (; i<l; i++) {
                 fltr = drills[k[i]];
@@ -33,7 +28,6 @@ baseApp.factory('DrillSrvc', [function ()
                 };
             }
             base.model.save('fltrs',data);
-            readyState = true;
         };
 
         var getTemplate = function(drill) {
@@ -77,7 +71,6 @@ baseApp.factory('DrillSrvc', [function ()
     // return this factories services
     return {
         'service': {
-            'ready' : readyState,
             'change': change
         },
         'onready': {

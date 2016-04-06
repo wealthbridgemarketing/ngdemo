@@ -1,7 +1,7 @@
 /* global siteApp */
 
 /**
- * Used to manage $scope.breadcrumbs in SiteCtrl
+ * Used to manage $scope.breadcrumbs in AppCtrl
  * 
  * The last element is the active page and 
  * should not contain the 'state' property.

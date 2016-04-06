@@ -4,14 +4,9 @@
 baseApp.factory('SnapshotsSrvc', [function () 
 {
     var base = {},
-        log  = function(m){console.log(m);},
-        apiEndpoint = 'snapshots/get/all',
-        readyState  = false;
+        apiEndpoint = 'snapshots/get/all';
 
-    var extend = function (services) {
-        base = services;
-        log  = base.log;
-    };
+    var extend = function (services) { base = services; };
 
     /**
      * Create the data object
@@ -28,17 +23,13 @@ baseApp.factory('SnapshotsSrvc', [function ()
                 };
             }
             base.model.save('snapshots', data);
-            readyState = true;
         };
-
         //createModel();
     };
 
     // return this factories services
     return {
-        'service': {
-            'ready' : readyState
-        },
+        'service': {},
         'onready': {
             'api'   : apiEndpoint,
             'init'  : init,
