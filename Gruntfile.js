@@ -238,7 +238,7 @@ module.exports = function (grunt) {
                 files  : [{
                     expand: true,
                     cwd   : 'src/',
-                    src   : ['**/*.html', '!assets/bower_components/**/*.html'],
+                    src   : ['**/*.html', '!api/**', '!assets/bower_components/**'],
                     dest  : 'dist/'
                 }]
             }
@@ -250,7 +250,7 @@ module.exports = function (grunt) {
                 files: [{
                     expand: true,
                     cwd   : 'src/',
-                    src   : ['**/*.json', '!assets/bower_components/**/*.json'],
+                    src   : ['**/*.json', '!api/**', '!__notes__/**', '!assets/bower_components/**'],
                     dest  : 'dist/'
                 }]
             }
@@ -263,7 +263,7 @@ module.exports = function (grunt) {
                 files  : [{
                     expand: true,
                     cwd   : 'src/',
-                    src   : ['**/*.' + imgExts, '!assets/bower_components/**/*.' + imgExts],
+                    src   : ['**/*.' + imgExts, '!api/**', '!assets/bower_components/**/*.' + imgExts],
                     dest  : 'dist/'
                 }]
             }
@@ -271,25 +271,33 @@ module.exports = function (grunt) {
 
 // COPY - Copy files and folders
         copy: {
+            api  : {
+                files: [{
+                    dot   : true,
+                    expand: true,
+                    cwd   : 'src/',
+                    src   : ['api/**'],
+                    dest  : 'dist/'
+                }]
+            },
             misc  : {
                 files: [{
                     dot   : true,
                     expand: true,
                     cwd   : 'src/',
-                    src   : ['**/*.*', '!**/.gitkeep', '!**/*.{scss,js,html,json}', '!**/*.' + imgExts, '!__notes__/**/*.*', '!assets/bower_components/**/*.*'],
+                    src   : ['**/*.*', '!api/**', '!**/.gitkeep', '!**/*.{scss,js,html,json}', '!**/*.' + imgExts, '!__notes__/**', '!assets/bower_components/**'],
                     dest  : 'dist/'
                 }]
             },
             vendor: {
-                files: [
+                files: [{
                     // bootstrap fonts
-                    {expand    : true,
-                        flatten: true,
-                        src    : [bowerPath + 'bootstrap/dist/fonts/*'],
-                        dest   : 'dist/assets/fonts/',
-                        filter : 'isFile'
-                    }
-                ]
+                    expand : true,
+                    flatten: true,
+                    src    : [bowerPath + 'bootstrap/dist/fonts/*'],
+                    dest   : 'dist/assets/fonts/',
+                    filter : 'isFile'
+                }]
             }
         },
 
@@ -368,7 +376,7 @@ module.exports = function (grunt) {
     grunt.registerTask('app-js', 'Uglify, concant and copy app js files to dist', ['clean:stage_js_app', 'uglify:appjs', 'concat:appjs']);
     grunt.registerTask('app-html', 'Minimize html files and copy to dist', ['htmlmin']);
     grunt.registerTask('app-json', 'Minimize json files and copy to dist', ['minjson']);
-    grunt.registerTask('app-copy', 'Copy all miscellaneous app files to dist', ['copy:misc']);
+    grunt.registerTask('app-copy', 'Copy all miscellaneous app files to dist', ['copy:api', 'copy:misc']);
     grunt.registerTask('app-imgs', 'Minimize images and copy to dist', ['imagemin']);
     grunt.registerTask('buildapp', 'Run the app tasks concurrently', ['concurrent:app']);
 

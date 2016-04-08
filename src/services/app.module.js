@@ -33,7 +33,7 @@ coreApp.constant('CFG', {
     APP_ROOT      : '/ngdemo/dist/', // relative to the web server sites directory (/var/www)
     LS_TYPE       : 'localStorage',  // localStorage or sessionStorage
     LS_PREFIX     : 'ngd',           // unique code appended to localStorage data
-    API_BASE_PATH : 'http://localhost/inteleview/analytics/backend/api',
+    API_BASE_PATH : 'api/v1',        // abs or rel path to remote api server - no trailing slash
     REGX_PATTERNS : {
         email  : /^([a-z0-9_\-\.]+)[@]([a-z0-9_\-\.]{2,99})[.]([a-z0-9]{2,20})+$/gmi,
         numeric: /^(\d+)$/gm,
@@ -67,14 +67,3 @@ coreApp.config(function (CFG, localStorageServiceProvider) {
     localStorageServiceProvider.setStorageType(CFG.LS_TYPE);
     localStorageServiceProvider.setPrefix(CFG.LS_PREFIX);
 });
-
-// PAGE TITLE - set using data.title of current state in ui-router
-siteApp.run(['$rootScope', 'CFG', function($rootScope, CFG) {
-    $rootScope.$on('$stateChangeSuccess', function (event, toState) {
-        var b = CFG.APP_TITLE,
-            t = b,
-            p = toState.data.title;
-        if (!!p) t = p + ' | ' + b;
-        $rootScope.$emit('PageTitleSet', [t]);
-    });
-}]);

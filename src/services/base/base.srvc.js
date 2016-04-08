@@ -51,11 +51,13 @@
  * The UserSrvc needs to be moved to the base directory and and the siteApp type is going away.  It's
  * going to be consumed by the BaseSrvc so that it's available throughout the system.
  */
-baseApp.factory('BaseSrvc', ['$interval',
-                    'DataSrvc','httpSrvc', 'AuthSrvc','uiSrvc',
+baseApp.factory('BaseSrvc', ['$interval', 
+                    'uiSrvc',
+                    'DataSrvc','httpSrvc', 'AuthSrvc',
                     'DrillSrvc','ChartSrvc','LayoutSrvc','PresetsSrvc','CstmViewsSrvc','SnapshotsSrvc','UserSrvc',
 function ($interval,
-          DataSrvc, httpSrvc, AuthSrvc, uiSrvc,
+          uiSrvc,
+          DataSrvc, httpSrvc, AuthSrvc,
           DrillSrvc, ChartSrvc, LayoutSrvc, PresetsSrvc, CstmViewsSrvc, SnapshotsSrvc, UserSrvc)
 {
     // define the basic services that are available early
