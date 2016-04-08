@@ -1,10 +1,11 @@
 <?php
 
-class dbConnect {
+class dbConnect
+{
 
     private $conn;
 
-    function __construct() {        
+    function __construct() {
     }
 
     /**
