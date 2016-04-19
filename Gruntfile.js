@@ -124,7 +124,8 @@ module.exports = function (grunt) {
                 files  : [{
                     src : [
                         bowerPath + 'bootstrap/dist/css/bootstrap.min.css',
-                        bowerPath + 'bootstrap/dist/css/bootstrap-theme.min.css'
+                        bowerPath + 'bootstrap/dist/css/bootstrap-theme.min.css',
+                        bowerPath + 'AngularJS-Toaster/toaster.min.css'
                     ],
                     dest: 'stage/css/vendor/concat.css',
                     nonull: true
@@ -157,6 +158,7 @@ module.exports = function (grunt) {
                         bowerPath + 'angular-ui-router/release/angular-ui-router.min.js',
                         bowerPath + 'angular-css/angular-css.min.js',
                         bowerPath + 'angular-bootstrap/ui-bootstrap-tpls.min.js',
+                        bowerPath + 'AngularJS-Toaster/toaster.min.js',
                         bowerPath + 'highcharts/highcharts.js',
                         bowerPath + 'highcharts/adapters/standalone-framework.js',
                         bowerPath + 'highcharts/modules/exporting.js',

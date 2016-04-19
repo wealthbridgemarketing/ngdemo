@@ -1,8 +1,6 @@
 <?php
-
 class DbHandler
 {
-
     private $conn;
 
     function __construct() {
@@ -88,7 +86,4 @@ class DbHandler
 
         return $msg;
     }
-
 }
-
-?>

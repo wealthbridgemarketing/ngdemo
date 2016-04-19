@@ -127,7 +127,8 @@ coreApp.factory('DataSrvc', ['CFG', 'localStorageService', function (CFG, localS
         'locStorage'   : locStorage,
         'regxPatterns' : CFG.REGX_PATTERNS,
         'AppData'      : appData,
-        'AppDataClass' : clsData
+        'AppDataClass' : clsData,
+        'AppTitle'     : CFG.APP_TITLE
     };
 
     return service;

@@ -3,7 +3,6 @@
 siteApp.controller('AppCtrl', ['$scope', '$rootScope', 'Breadcrumbs', 'BaseSrvc', function($scope, $rootScope, Breadcrumbs, BaseSrvc)
 {
   var vm = this;
-      
   
   vm.showLoadingPanel = function() {
     if (!appStarting && BaseSrvc.ready) BaseSrvc.ready = false;

@@ -1,53 +1,81 @@
 <div class="container">
-  <div class="row">
-    <div class="col-xs-12">
-      
-      <h2>Application Menu</h2>
-      <dl class="dl-horizontal">
-        <dt><a ui-sref="analytics">Analytics</a></dt>
-        <dd>Seedling of the next app.</dd>
-      </dl>
-      <dl class="dl-horizontal">
-        <dt><a ui-sref="templates">Dynamic Templates</a></dt>
-        <dd>Illustrates how to use dynamic templates in AngularJS via a directive.</dd>
-      </dl>
-      <dl class="dl-horizontal">
-        <dt><a ui-sref="transfer">Transfer Cash</a></dt>
-        <dd>A complete AngularJS app that I created as a learning excercise.</dd>
-      </dl>
-      <dl class="dl-horizontal">
-        <dt><a ui-sref="profile">User Profile (snippet)</a></dt>
-        <dd>Bootstrap 3 User Profile Editor.</dd>
-      </dl>
-      <dl class="dl-horizontal">
-        <dt><a ui-sref="contact">Contact Us (snippet)</a></dt>
-        <dd>Bootstrap 3 Contact Us form. The inputs have ng-model attributes, however, the controller is still empty.</dd>
-      </dl>
-      <dl class="dl-horizontal">
-        <dt><a ui-sref="404">404 Error</a></dt>
-        <dd>The default route used for unmatched urls.</dd>
-      </dl>
-      <!--      
-      <dl class="dl-horizontal">
-        <dt><a ui-sref="blah">Blah</a></dt>
-        <dd>blah</dd>
-      </dl>
-      -->
-      
+    <div class="row">
+        <div class="col-xs-12">
+
+            <h2>Application Menu</h2>
+            <dl class="dl-horizontal">
+                <dt><a ui-sref="analytics">Analytics</a></dt>
+                <dd>Seedling of the next app.</dd>
+            </dl>
+            <dl class="dl-horizontal">
+                <dt><a ui-sref="templates">Dynamic Templates</a></dt>
+                <dd>Illustrates how to use dynamic templates in AngularJS via a directive.</dd>
+            </dl>
+            <dl class="dl-horizontal">
+                <dt><a ui-sref="transfer">Transfer Cash</a></dt>
+                <dd>A complete AngularJS app that I created as a learning excercise.</dd>
+            </dl>
+            <dl class="dl-horizontal">
+                <dt><a ui-sref="profile">User Profile (snippet)</a></dt>
+                <dd>Bootstrap 3 User Profile Editor.</dd>
+            </dl>
+            <dl class="dl-horizontal">
+                <dt><a ui-sref="contact">Contact Us (snippet)</a></dt>
+                <dd>Bootstrap 3 Contact Us form. The inputs have ng-model attributes, however, the controller is still empty.</dd>
+            </dl>
+            <dl class="dl-horizontal">
+                <dt><a ui-sref="404">404 Error</a></dt>
+                <dd>The default route used for unmatched urls.</dd>
+            </dl>
+            <!--
+            <dl class="dl-horizontal">
+              <dt><a ui-sref="blah">Blah</a></dt>
+              <dd>blah</dd>
+            </dl>
+            -->
+
+        </div>
     </div>
-  </div>
 </div>
 
 <div class="container">
-  <div class="row">
-    <div class="col-xs-12">
+    <div class="row">
+        <div class="col-xs-12">
 
-      <input type="checkbox" ng-model="mychkbox" name="ng-change-ex" id="1" drill-watch when-changed="base.drills.change(event)" />
-      <input type="checkbox" ng-model="mychkbox" name="ng-change-ex" id="2" drill-watch when-changed="base.drills.change(event)" ng-change="increment()" />
-      <input type="checkbox" ng-model="mychkbox" name="ng-change-ex" id="3" drill-watch when-changed="base.drills.change(event)" /><br />
-      <tt>chk-2 = {{mychkbox}}</tt><br/>
-      <tt>counter = {{counter}}</tt><br/>
+            <div class="space-6"></div>
+            <div class="col-sm-10 col-sm-offset-1">
+                <div id="login-box" class="login-box visible widget-box no-border">
+                    <div class="widget-body">
+                        <div class="widget-main">
+                            <h4 class="header blue lighter bigger">
+                                <i class="icon-coffee green"></i>
+                                User Authenticated
+                            </h4>
+                            <div class="space-16"></div>
+                            UID: {{uid}}
+                            <br/>NAME: {{name}}
+                            <br/>E-MAIL: {{email}}
+                            <br/>
+                            <a ng-click="logout();">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+        </div>
     </div>
-  </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+
+            <input type="checkbox" ng-model="mychkbox" name="ng-change-ex" id="1" drill-watch when-changed="base.drills.change(event)"/>
+            <input type="checkbox" ng-model="mychkbox" name="ng-change-ex" id="2" drill-watch when-changed="base.drills.change(event)" ng-change="increment()"/>
+            <input type="checkbox" ng-model="mychkbox" name="ng-change-ex" id="3" drill-watch when-changed="base.drills.change(event)"/><br/>
+            <tt>chk-2 = {{mychkbox}}</tt><br/>
+            <tt>counter = {{counter}}</tt><br/>
+
+        </div>
+    </div>
 </div>

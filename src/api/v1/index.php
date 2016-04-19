@@ -51,4 +51,3 @@ function echoResponse($status_code, $response) {
 }
 
 $app->run();
-?>

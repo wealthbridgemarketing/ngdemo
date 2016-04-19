@@ -1,12 +1,9 @@
 <?php
-
 class dbConnect
 {
-
     private $conn;
 
-    function __construct() {
-    }
+    function __construct() {}
 
     /**
      * Establishing database connection
@@ -26,7 +23,4 @@ class dbConnect
         // returing connection resource
         return $this->conn;
     }
-
 }
-
-?>

@@ -1,8 +1,6 @@
 <?php
-
 class passwordHash
 {
-
     // blowfish
     private static $algo = '$2a';
     // cost parameter
@@ -15,7 +13,6 @@ class passwordHash
 
     // this will be used to generate a hash
     public static function hash($password) {
-
         return crypt($password, self::$algo .
             self::$cost .
             '$' . self::unique_salt());
@@ -28,7 +25,4 @@ class passwordHash
 
         return ($hash == $new_hash);
     }
-
 }
-
-?>

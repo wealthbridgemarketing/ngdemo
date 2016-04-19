@@ -41,6 +41,7 @@ $app->post('/login', function () use ($app) {
     }
     echoResponse(200, $response);
 });
+
 $app->post('/signUp', function () use ($app) {
     $response = array();
     $r = json_decode($app->request->getBody());
@@ -81,6 +82,7 @@ $app->post('/signUp', function () use ($app) {
         echoResponse(201, $response);
     }
 });
+
 $app->get('/logout', function () {
     $db = new DbHandler();
     $session = $db->destroySession();
@@ -88,4 +90,3 @@ $app->get('/logout', function () {
     $response["message"] = "Logged out successfully";
     echoResponse(200, $response);
 });
-?>

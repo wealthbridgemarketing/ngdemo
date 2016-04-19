@@ -53,7 +53,7 @@
  */
 baseApp.factory('BaseSrvc', ['$interval', 
                     'uiSrvc',
-                    'DataSrvc','httpSrvc', 'AuthSrvc',
+                    'DataSrvc','httpSrvc','AuthSrvc',
                     'DrillSrvc','ChartSrvc','LayoutSrvc','PresetsSrvc','CstmViewsSrvc','SnapshotsSrvc','UserSrvc',
 function ($interval,
           uiSrvc,
@@ -62,10 +62,11 @@ function ($interval,
 {
     // define the basic services that are available early
     var service = {
-        ready  : false,
-        ls     : DataSrvc.locStorage,
-        pattern: DataSrvc.regxPatterns,
-        ui     : uiSrvc
+        ready   : false,
+        appTitle: DataSrvc.AppTitle,
+        ls      : DataSrvc.locStorage,
+        pattern : DataSrvc.regxPatterns,
+        ui      : uiSrvc
     };
     //log([['[ts] Basic BaseSrvc Services','i','black'],service]);
 
@@ -86,13 +87,13 @@ function ($interval,
             };
             
             // remote api calls to fetch the data for each service
-            if (srvcRequiresData(    DrillSrvc)) httpSrvc.select(    DrillSrvc.onready.api).then(function(data) {     DrillSrvc.onready.init(data); });
-            if (srvcRequiresData(    ChartSrvc)) httpSrvc.select(    ChartSrvc.onready.api).then(function(data) {     ChartSrvc.onready.init(data); });
-            if (srvcRequiresData(   LayoutSrvc)) httpSrvc.select(   LayoutSrvc.onready.api).then(function(data) {    LayoutSrvc.onready.init(data); });
-            if (srvcRequiresData(  PresetsSrvc)) httpSrvc.select(  PresetsSrvc.onready.api).then(function(data) {   PresetsSrvc.onready.init(data); });
-            if (srvcRequiresData(CstmViewsSrvc)) httpSrvc.select(CstmViewsSrvc.onready.api).then(function(data) { CstmViewsSrvc.onready.init(data); });
-            if (srvcRequiresData(SnapshotsSrvc)) httpSrvc.select(SnapshotsSrvc.onready.api).then(function(data) { SnapshotsSrvc.onready.init(data); });
-            if (srvcRequiresData(     UserSrvc)) httpSrvc.select(     UserSrvc.onready.api).then(function(data) {      UserSrvc.onready.init(data); });
+            if (srvcRequiresData(    DrillSrvc)) httpSrvc.get(    DrillSrvc.onready.api).then(function(data) {     DrillSrvc.onready.init(data); });
+            if (srvcRequiresData(    ChartSrvc)) httpSrvc.get(    ChartSrvc.onready.api).then(function(data) {     ChartSrvc.onready.init(data); });
+            if (srvcRequiresData(   LayoutSrvc)) httpSrvc.get(   LayoutSrvc.onready.api).then(function(data) {    LayoutSrvc.onready.init(data); });
+            if (srvcRequiresData(  PresetsSrvc)) httpSrvc.get(  PresetsSrvc.onready.api).then(function(data) {   PresetsSrvc.onready.init(data); });
+            if (srvcRequiresData(CstmViewsSrvc)) httpSrvc.get(CstmViewsSrvc.onready.api).then(function(data) { CstmViewsSrvc.onready.init(data); });
+            if (srvcRequiresData(SnapshotsSrvc)) httpSrvc.get(SnapshotsSrvc.onready.api).then(function(data) { SnapshotsSrvc.onready.init(data); });
+            if (srvcRequiresData(     UserSrvc)) httpSrvc.get(     UserSrvc.onready.api).then(function(data) {      UserSrvc.onready.init(data); });
 
             // define the services available to service providers via their extend() method
             var providerServices = {

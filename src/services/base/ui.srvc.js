@@ -586,63 +586,63 @@ siteApp.factory('uiSrvc',
             };
 
             return services;
-        }]);
+        }
+    ]
+);
 
 /**
  * Provides the uiSrvc.confirm dialog service.
  */
-siteApp.service('uiConfirm',
-    ['$uibModal', function($uibModal) {
+siteApp.service('uiConfirm', ['$uibModal', function($uibModal) {
 
-        var modalOptions = {
-            btnOk : 'OK',
-            btnCxl: 'Cancel',
-            title : 'Confirmation Required',
-            text  : 'Please confirm that you wish to proceed by clicking OK.'
-        };
+    var modalOptions = {
+        btnOk : 'OK',
+        btnCxl: 'Cancel',
+        title : 'Confirmation Required',
+        text  : 'Please confirm that you wish to proceed by clicking OK.'
+    };
 
-        var modalDefaults = {
-            animation  : true,
-            backdrop   : 'static',
-            keyboard   : true,
-            templateUrl: 'components/templates/uiConfirmModal.html'
-        };
+    var modalDefaults = {
+        animation  : true,
+        backdrop   : 'static',
+        keyboard   : true,
+        templateUrl: 'components/templates/uiConfirmModal.html'
+    };
 
-        this.showModal = function(customModalDefaults, customModalOptions) {
-            if (!customModalDefaults) customModalDefaults = {};
-            return this.show(customModalDefaults, customModalOptions);
-        };
+    this.showModal = function(customModalDefaults, customModalOptions) {
+        if (!customModalDefaults) customModalDefaults = {};
+        return this.show(customModalDefaults, customModalOptions);
+    };
 
-        this.show = function(customModalDefaults, customModalOptions) {
-            //Create temp objects to work with since we're in a singleton service
-            var tempModalDefaults = {};
-            var tempModalOptions  = {};
+    this.show = function(customModalDefaults, customModalOptions) {
+        //Create temp objects to work with since we're in a singleton service
+        var tempModalDefaults = {};
+        var tempModalOptions  = {};
 
-            //Map angular-ui modal custom defaults to modal defaults defined in service
-            angular.extend(tempModalDefaults, modalDefaults, customModalDefaults);
+        //Map angular-ui modal custom defaults to modal defaults defined in service
+        angular.extend(tempModalDefaults, modalDefaults, customModalDefaults);
 
-            //Map modal.html $scope custom properties to defaults defined in service
-            angular.extend(tempModalOptions, modalOptions, customModalOptions);
+        //Map modal.html $scope custom properties to defaults defined in service
+        angular.extend(tempModalOptions, modalOptions, customModalOptions);
 
-            if (!tempModalDefaults.controller) {
-                tempModalDefaults.controller = function($scope, $uibModalInstance) {
-                    $scope.modalOptions        = tempModalOptions;
-                    $scope.modalOptions.ok     = function(/*result*/) {
-                        $uibModalInstance.close();
-                    };
-                    $scope.modalOptions.cancel = function(/*reason*/) {
-                        $uibModalInstance.dismiss();
-                    };
-                }
+        if (!tempModalDefaults.controller) {
+            tempModalDefaults.controller = function($scope, $uibModalInstance) {
+                $scope.modalOptions        = tempModalOptions;
+                $scope.modalOptions.ok     = function(/*result*/) {
+                    $uibModalInstance.close();
+                };
+                $scope.modalOptions.cancel = function(/*reason*/) {
+                    $uibModalInstance.dismiss();
+                };
             }
+        }
 
-            return $uibModal.open(tempModalDefaults).result;
-        };
-    }]
-);
+        return $uibModal.open(tempModalDefaults).result;
+    };
+}]);
 
 /**
- * Provides the uiSrvc.alert dialog service.
+ * Provides the uiSrvc.[alert|info|confirm|prompt|window] dialog service.
  */
 siteApp.service('uiModal', ['$uibModal', function($uibModal) {
 
@@ -811,31 +811,33 @@ siteApp.service('uiModal', ['$uibModal', function($uibModal) {
     };
 }]);
 
-siteApp.directive('uiPanel',
-    ['uiSrvc', function(uiSrvc) {
-        return {
-            restrict   : 'E',
-            scope      : true,
-            templateUrl: 'components/templates/uiPanel.html',
-            controller : function($scope, $element, $attrs) {
-                var ui = uiSrvc;
-                ui.panel.init($attrs.idx);
-                $scope.canShow = function() {
-                    return ui.panel.show($attrs.idx);
-                };
-                $scope.getType = function() {
-                    return ui.panel.type($attrs.idx);
-                };
-                $scope.getText = function() {
-                    return ui.panel.text($attrs.idx);
-                };
-                $scope.getMrgn = function() {
-                    return !!$attrs.mrgn ? {'margin': $attrs.mrgn} : '';
-                };
-            }
-        };
-    }]
-);
+siteApp.directive('uiPanel', ['uiSrvc', function(uiSrvc) {
+    return {
+        restrict   : 'E',
+        scope      : true,
+        templateUrl: 'components/templates/uiPanel.html',
+        controller : function($scope, $element, $attrs) {
+            var ui = uiSrvc;
+            ui.panel.init($attrs.idx);
+            $scope.canShow = function() {
+                return ui.panel.show($attrs.idx);
+            };
+            $scope.getType = function() {
+                return ui.panel.type($attrs.idx);
+            };
+            $scope.getText = function() {
+                return ui.panel.text($attrs.idx);
+            };
+            $scope.getMrgn = function() {
+                return !!$attrs.mrgn ? {'margin': $attrs.mrgn} : '';
+            };
+        }
+    };
+}]);
 
 // Use this filter with ng-bind-html to prevent the unsafe warning
 siteApp.filter('trusted', function($sce) { return $sce.trustAsHtml; });
+
+siteApp.directive('focus', function() {
+    return function(scope, element) { element[0].focus(); }
+});

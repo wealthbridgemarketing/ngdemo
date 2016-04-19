@@ -62,7 +62,7 @@ siteApp
             })
             .state('login', {
                 url        : '/login',
-                templateUrl: 'sections/auth/login.html',
+                templateUrl: 'sections/auth/login/view.html',
                 controller : 'AuthCtrl',
                 data       : {title: 'Login'}
             })
@@ -74,7 +74,7 @@ siteApp
             })
             .state('signup', {
                 url        : '/signup',
-                templateUrl: 'sections/auth/signup.html',
+                templateUrl: 'sections/auth/signup/view.html',
                 controller : 'AuthCtrl',
                 data       : {title: 'Signup'}
             })
@@ -90,7 +90,7 @@ siteApp
     .run(['$rootScope', '$location', 'CFG', 'httpSrvc', function($rootScope, $location, CFG, httpSrvc) {
 
         // If the user isn't authenticated redirect to the login page
-        $rootScope.$on('$routeChangeStart', function (event, next, current) {
+        $rootScope.$on('$stateChangeStart', function (event, toState) {
             $rootScope.authenticated = false;
             httpSrvc.get('/session').then(function (results) {
                 var data = results.data;
@@ -100,7 +100,7 @@ siteApp
                     $rootScope.name = data.name;
                     $rootScope.email = data.email;
                 }
-                else if (['/login','/signup'].indexOf(next.$$route.originalPath) === -1) {
+                else if (['/login','/signup'].indexOf(toState.url) === -1) {
                     $location.path('/login');
                 }
             });
